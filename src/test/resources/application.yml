@@ -1,0 +1,34 @@
+server:
+  port: 9021
+  servlet:
+    context-path: /feed
+application:
+  version: @project.version@
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: jdbc:h2:mem:testdb;Mode=PostgreSQL
+    platform: h2
+    continue-on-error: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: none
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus", "metrics"]
+      base-path: /internal/actuator
