@@ -1,0 +1,26 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: pam-public-feed
+  namespace: default
+  labels:
+    team: teampam
+spec:
+  image: repo.adeo.no:5443/pam-public-feed
+  port: 9021
+  replicas:
+    min: 2
+    max: 4
+    cpuThresholdPercentage: 50
+  liveness:
+    initialDelay: 10
+    path: /isAlive
+  readiness:
+    initialDelay: 10
+    path: /isAlive
+  prometheus:
+    enabled: true
+    path: /prometheus
+  webproxy: true
+  vault:
+    enabled: true
