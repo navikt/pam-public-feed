@@ -1,19 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<configuration debug="true">
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%level %logger %msg %n</pattern>
-        </encoder>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeCallerData>true</includeCallerData>
-        </encoder>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
 
-    <logger name="no.nav" level="DEBUG"/>
+    <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="OFF" />
 
-    <root level="debug">
-        <appender-ref ref="CONSOLE"/>
+    <root level="INFO">
+        <appender-ref ref="stdout_json" />
     </root>
-
 </configuration>

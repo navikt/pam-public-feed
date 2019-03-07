@@ -1,12 +1,11 @@
 server:
   port: 9021
-  servlet:
-    context-path: /feed
-application:
-  version: @project.version@
+#application:
+#  version: @project.version@
+
 spring:
   profiles:
-    active: test
+    active: test, dev
   datasource:
     url: jdbc:h2:mem:testdb;Mode=PostgreSQL
     platform: h2
@@ -32,3 +31,6 @@ management:
       exposure:
         include: ["prometheus", "metrics"]
       base-path: /internal/actuator
+pam:
+  search-api:
+    url: https://pam-search-api.nais.oera-q.local/ad/_search
