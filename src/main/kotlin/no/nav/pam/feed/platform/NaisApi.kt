@@ -9,6 +9,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
+import io.prometheus.client.hotspot.DefaultExports
 
 
 fun Routing.naisApi(
@@ -16,6 +17,7 @@ fun Routing.naisApi(
         alive: () -> Boolean = { true },
         collectorRegistry: CollectorRegistry = CollectorRegistry.defaultRegistry
 ) {
+    DefaultExports.initialize()
     get("isReady") {
         if (ready())
             call.respondText("Ready")
