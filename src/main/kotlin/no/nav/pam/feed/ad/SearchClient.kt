@@ -1,12 +1,13 @@
 package no.nav.pam.feed.ad
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import io.ktor.application.call
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.url
-import io.ktor.client.response.readBytes
+import io.ktor.client.response.readText
 import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
@@ -17,8 +18,6 @@ import io.ktor.routing.get
 import kotlinx.coroutines.async
 
 
-data class FeedAd(val title: String)
-
 fun Routing.feed(
         searchApiHost: String = "https://pam-search-api.nais.oera-q.local",
         clientFactory: () -> HttpClient = { HttpClient(Apache) }
@@ -27,13 +26,34 @@ fun Routing.feed(
         clientFactory().use {
             try {
                 val from = call.parameters["from"]?.toInt() ?: 0
-                val size = call.parameters["size"]?.toInt() ?: 1
+                val size = call.parameters["size"]?.toInt() ?: 100
                 val requestBody = """{
                 "sort": [{"published": "desc"}],
                 "query": {
                    "term": {"status": "ACTIVE"}},
                  "_source": {
-                   "includes": [  ],
+                   "includes": [
+                     "uuid",
+                     "created",
+                     "updated",
+                     "published",
+                     "expires",
+                     "locationList",
+                     "title",
+                     "source",
+                     "medium",
+                     "reference",
+                     "businessName",
+                     "properties.adtext",
+                     "properties.sourceurl",
+                     "properties.applicationdue",
+                     "properties.engagementtype",
+                     "properties.extent",
+                     "properties.occupation",
+                     "properties.positioncount",
+                     "properties.sector",
+                     "properties.industry"
+                     ],
                    "excludes": [ ]
                  },
                  "from": $from,
@@ -45,12 +65,14 @@ fun Routing.feed(
                         method = HttpMethod.Post
                         url("$searchApiHost/ad/_search")
                         body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
-                    }.response.readBytes()
+                    }.response.readText()
                 }
 
-                // TODO conversion
+                val gson = Gson()
+                val jsonObject = gson.fromJson(searchRequest.await(), JsonObject::class.java)
+                val feedPage = mapJsonObjectToFeedPage(jsonObject)
 
-                call.respond(searchRequest.await())
+                call.respond(feedPage)
             } catch (e: NumberFormatException) {
                 call.respond(HttpStatusCode.BadRequest, "One of parameters has wrong format")
             }
