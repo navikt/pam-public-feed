@@ -23,4 +23,4 @@ spec:
     path: /prometheus
   webproxy: true
   vault:
-    enabled: true
+    enabled: false
