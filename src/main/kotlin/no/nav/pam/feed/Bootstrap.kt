@@ -1,12 +1,10 @@
 package no.nav.pam.feed
 
-import com.google.gson.JsonPrimitive
-import com.google.gson.JsonSerializer
 import io.ktor.application.install
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.features.ContentNegotiation
-import io.ktor.gson.gson
+import io.ktor.jackson.jackson
 import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
@@ -15,9 +13,6 @@ import mu.KotlinLogging
 import no.nav.pam.feed.Bootstrap.start
 import no.nav.pam.feed.ad.feed
 import no.nav.pam.feed.platform.naisApi
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter.ISO_INSTANT
 
 fun main(args: Array<String>) {
 
@@ -33,12 +28,9 @@ fun webApplication(
         ): ApplicationEngine {
     return embeddedServer(Netty, port) {
         install(ContentNegotiation) {
-            gson {
-                setPrettyPrinting()
-                registerTypeAdapter(LocalDateTime::class.java, JsonSerializer<LocalDateTime> { localDateTime, type, context ->
-                    JsonPrimitive(ISO_INSTANT.format(localDateTime.atOffset(ZoneOffset.UTC).toInstant()))
-                })
-            }
+            jackson(
+
+            )
         }
         routing {
             naisApi()
