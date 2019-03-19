@@ -1,13 +1,17 @@
 package no.nav.pam.feed.ad
 
-import com.google.gson.Gson
-import com.google.gson.JsonObject
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.application.call
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
 import io.ktor.client.engine.apache.Apache
+import io.ktor.client.features.json.JacksonSerializer
+import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.url
-import io.ktor.client.response.readText
+import io.ktor.client.response.readBytes
 import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
@@ -17,10 +21,18 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import kotlinx.coroutines.async
 
+val objectMapper = ObjectMapper()
+        .registerModule(KotlinModule())
+        .registerModule(JavaTimeModule())!!
 
 fun Routing.feed(
+
         searchApiHost: String = "https://pam-search-api.nais.oera-q.local",
-        clientFactory: () -> HttpClient = { HttpClient(Apache) }
+        clientFactory: () -> HttpClient = { HttpClient(Apache) {
+            install(JsonFeature) {
+                serializer = JacksonSerializer()
+            }
+        }}
 ) {
     get("/api/feed") {
         clientFactory().use {
@@ -52,7 +64,8 @@ fun Routing.feed(
                      "properties.occupation",
                      "properties.positioncount",
                      "properties.sector",
-                     "properties.industry"
+                     "properties.industry",
+                     "properties.employer"
                      ],
                    "excludes": [ ]
                  },
@@ -65,14 +78,13 @@ fun Routing.feed(
                         method = HttpMethod.Post
                         url("$searchApiHost/ad/_search")
                         body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
-                    }.response.readText()
+                    }.response.readBytes()
                 }
 
-                val gson = Gson()
-                val jsonObject = gson.fromJson(searchRequest.await(), JsonObject::class.java)
-                val feedPage = mapJsonObjectToFeedPage(jsonObject)
+                val response : SearchResponseRoot = objectMapper.readValue(searchRequest.await())
+                val output = mapResult(response)
 
-                call.respond(feedPage)
+                call.respond(output)
             } catch (e: NumberFormatException) {
                 call.respond(HttpStatusCode.BadRequest, "One of parameters has wrong format")
             }

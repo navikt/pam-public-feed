@@ -1,77 +1,50 @@
 package no.nav.pam.feed.ad
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
 
-fun mapJsonObjectToFeedPage(jsonObject: JsonObject): FeedPage {
-    val hits = jsonObject.getAsJsonObject("hits")
-    val total = hits.getAsJsonPrimitive("total").asInt
-    val hitsArray = hits.getAsJsonArray("hits")
+fun mapResult(root: SearchResponseRoot): FeedRoot {
 
-    var feedAdList = arrayListOf<FeedAd>()
-    for (h in hitsArray) {
-        feedAdList.add(mapHitToFeedAd(h.asJsonObject))
-    }
+    val adList = root.hits.hits.map { element -> mapAd(element.source) }
 
-    return FeedPage(total, feedAdList)
+    return FeedRoot(root.hits.total, adList)
 }
 
-fun mapHitToFeedAd(jsonObject: JsonObject): FeedAd {
-    val source = jsonObject.getAsJsonObject("_source")
-    val locationList = source.getAsJsonArray("locationList")
-    val properties = source.getAsJsonObject("properties")
+fun mapAd(source: Source): FeedAd {
+
+    val locations = source.locations.map { l -> mapLocation(l) }
+    var employer = source.businessName ?: source.properties["employer"]
 
     return FeedAd(
-            source.get("uuid").asString,
-            "/stillinger/stilling/" + source.get("uuid").asString,
-            source.get("created").asString,
-            source.get("updated").asString,
-            source.get("published").asString,
-            source.get("expires").asString,
-            mapLocationList(locationList),
-            source.get("title").asString,
-            source.get("source").asString,
-            source.get("medium").asString,
-            source.get("reference").asString,
-            source.get("businessName").asString,
-            properties.get("adtext").asString,
-            fetchNullablePrimitive(properties, "sourceurl")?.asString,
-            fetchNullablePrimitive(properties, "applicationdue")?.asString,
-            fetchNullablePrimitive(properties, "engagementtype")?.asString,
-            fetchNullablePrimitive(properties, "extent")?.asString,
-            fetchNullablePrimitive(properties, "occupation")?.asString,
-            fetchNullablePrimitive(properties, "positioncount")?.asInt,
-            fetchNullablePrimitive(properties, "sector")?.asString,
-            fetchNullablePrimitive(properties, "industry")?.asString
+            source.uuid,
+            source.created,
+            source.updated,
+            source.published,
+            source.expires,
+            locations,
+            source.title,
+            source.source,
+            source.medium,
+            source.reference,
+            employer ?: "",
+            source.properties["adtext"],
+            source.properties["sourceurl"],
+            source.properties["applicationdue"],
+            source.properties["engagementtype"],
+            source.properties["extent"],
+            source.properties["occupation"],
+            source.properties["positioncount"]?.toInt() ?: null,
+            source.properties["sector"],
+            source.properties["industry"]
     )
 }
 
-fun mapLocationList(locationListArray: JsonArray): ArrayList<FeedLocation> {
-    val locationList = arrayListOf<FeedLocation>()
 
-    for (element in locationListArray) {
-        val location = element.asJsonObject
-
-        locationList.add(FeedLocation(
-                location.get("country").asString,
-                fetchNullablePrimitive(location, "address")?.asString,
-                fetchNullablePrimitive(location, "city")?.asString,
-                fetchNullablePrimitive(location, "postalCode")?.asString,
-                fetchNullablePrimitive(location, "county")?.asString,
-                fetchNullablePrimitive(location, "municipal")?.asString
-        ))
-    }
-
-    return locationList
-}
-
-fun fetchNullablePrimitive(jsonObject: JsonObject, name: String): JsonPrimitive? {
-    return if (fetchNullableElement(jsonObject, name)?.isJsonPrimitive == true)
-        fetchNullableElement(jsonObject, name)?.asJsonPrimitive else null
-}
-
-fun fetchNullableElement(jsonObject: JsonObject, name: String): JsonElement? {
-    return if (jsonObject.has(name)) jsonObject.get(name) else null
+fun mapLocation(sourceLocation: Location): FeedLocation {
+    return FeedLocation(
+            sourceLocation.country,
+            sourceLocation.address,
+            sourceLocation.city,
+            sourceLocation.postalCode,
+            sourceLocation.county,
+            sourceLocation.municipal
+    )
 }

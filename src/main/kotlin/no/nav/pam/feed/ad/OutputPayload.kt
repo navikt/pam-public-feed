@@ -1,20 +1,23 @@
 package no.nav.pam.feed.ad
 
-data class FeedPage(val total: Int, val ads: ArrayList<FeedAd>)
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class FeedRoot(val total: Int, val ads: List<FeedAd>)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class FeedAd(val uuid: String,
-                  val url: String,
                   val created: String,
                   val updated: String,
                   val published: String,
                   val expires: String,
-                  val locations: ArrayList<FeedLocation>,
+                  val locations: List<FeedLocation>,
                   val title: String,
                   val source: String,
                   val medium: String,
-                  val source_id: String,
-                  val businessName: String,
-                  val adtext: String,
+                  val reference: String,
+                  val employer: String,
+                  val adtext: String?,
                   val sourceurl: String?,
                   val applicationdue: String?,
                   val engagementtype: String?,
@@ -24,6 +27,7 @@ data class FeedAd(val uuid: String,
                   val sector: String?,
                   val industry: String?)
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class FeedLocation(val country: String,
                         val address: String?,
                         val city: String?,
