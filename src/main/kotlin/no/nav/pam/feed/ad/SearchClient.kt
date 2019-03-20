@@ -70,6 +70,8 @@ fun Routing.feed(
                  "size": $size
                  }""".trimIndent()
 
+                println("ASDA $searchApiHost" )
+
                 val searchRequest = async {
                     it.post<SearchResponseRoot> {
                         url("$searchApiHost/ad/_search")
