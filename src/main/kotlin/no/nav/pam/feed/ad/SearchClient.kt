@@ -1,5 +1,7 @@
 package no.nav.pam.feed.ad
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.application.call
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -21,7 +23,10 @@ fun Routing.feed(
         clientFactory: () -> HttpClient = {
             HttpClient(Apache) {
                 install(JsonFeature) {
-                    serializer = JacksonSerializer()
+                    serializer = JacksonSerializer {
+                        registerModule(JavaTimeModule())
+                        registerModule(KotlinModule())
+                    }
                 }
             }
         }

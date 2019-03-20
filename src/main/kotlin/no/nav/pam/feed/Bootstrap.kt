@@ -1,5 +1,10 @@
 package no.nav.pam.feed
 
+import com.fasterxml.jackson.core.util.DefaultIndenter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.application.install
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -16,21 +21,26 @@ import no.nav.pam.feed.platform.naisApi
 
 fun main(args: Array<String>) {
 
-
     start(webApplication())
-
 }
 
 fun webApplication(
         port: Int = 9021,
         clientFactory: () -> HttpClient = { HttpClient(Apache) },
         environment: Environment = Environment()
-        ): ApplicationEngine {
+): ApplicationEngine {
     return embeddedServer(Netty, port) {
         install(ContentNegotiation) {
-            jackson(
-
-            )
+            jackson {
+                configure(SerializationFeature.INDENT_OUTPUT, true)
+                setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
+                    indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
+                    indentObjectsWith(DefaultIndenter("  ", "\n"))
+                })
+                registerModule(JavaTimeModule())
+                registerModule(KotlinModule())
+                configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            }
         }
         routing {
             naisApi()

@@ -2,7 +2,6 @@ package no.nav.pam.feed.ad
 
 
 fun mapResult(root: SearchResponseRoot): FeedRoot {
-
     val adList = root.hits.hits.map { element -> mapAd(element.source) }
 
     return FeedRoot(root.hits.total, adList)
@@ -36,7 +35,6 @@ fun mapAd(source: Source): FeedAd {
             source.properties["industry"]
     )
 }
-
 
 fun mapLocation(sourceLocation: Location): FeedLocation {
     return FeedLocation(
