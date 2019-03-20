@@ -25,4 +25,4 @@ spec:
   vault:
     enabled: false
   ingresses:
-    - https://pam-public-feed.nais.oera.no
+    - https://pam-public-feed.nais.oera-q.local
