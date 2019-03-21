@@ -71,14 +71,21 @@ fun Routing.feed(
                  }""".trimIndent()
 
 
+//                val searchRequest = async {
+//                    it.post<SearchResponseRoot> {
+//                        url("$searchApiHost/ad/_search")
+//                        body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
+//                    }
+//                }.await()
                 val searchRequest = async {
-                    it.post<SearchResponseRoot> {
+                    it.post<String> {
                         url("$searchApiHost/ad/_search")
                         body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
                     }
                 }.await()
 
-                call.respond(mapResult(searchRequest))
+                //call.respond(mapResult(searchRequest))
+                call.respond(searchRequest)
             } catch (e: NumberFormatException) {
                 call.respond(HttpStatusCode.BadRequest, "One of parameters has wrong format")
             }
