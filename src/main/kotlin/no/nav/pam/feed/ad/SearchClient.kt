@@ -20,8 +20,9 @@ fun Routing.feed(
     get("/api/feed") {
         clientFactory().use { it ->
             try {
-                val from = call.parameters["from"]?.toInt() ?: 0
+                val page = call.parameters["page"]?.toInt() ?: 0
                 val size = call.parameters["size"]?.toInt() ?: 100
+                val from = page * size
                 val requestBody = """{
                 "sort": [{"published": "desc"}],
                 "query": {
@@ -56,7 +57,6 @@ fun Routing.feed(
                  "size": $size
                  }""".trimIndent()
 
-
                 val searchRequest = async {
                     it.post<SearchResponseRoot> {
                         url("$searchApiHost/ad/_search")
@@ -64,7 +64,7 @@ fun Routing.feed(
                     }
                 }.await()
 
-                call.respond(mapResult(searchRequest))
+                call.respond(mapResult(searchRequest, page, size))
             } catch (e: NumberFormatException) {
                 call.respond(HttpStatusCode.BadRequest, "One of parameters has wrong format")
             }

@@ -1,10 +1,10 @@
 package no.nav.pam.feed.ad
 
 
-fun mapResult(root: SearchResponseRoot): FeedRoot {
+fun mapResult(root: SearchResponseRoot, page: Int, size: Int): FeedRoot {
     val adList = root.hits.hits.map { element -> mapAd(element.source) }
 
-    return FeedRoot(root.hits.total, adList)
+    return FeedRoot(adList, root.hits.total, page, size)
 }
 
 fun mapAd(source: Source): FeedAd {
@@ -20,8 +20,6 @@ fun mapAd(source: Source): FeedAd {
             source.expires,
             locations,
             source.title,
-            source.source,
-            source.medium,
             source.reference,
             employer ?: "",
             source.properties["adtext"],

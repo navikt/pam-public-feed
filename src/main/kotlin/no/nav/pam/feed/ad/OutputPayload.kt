@@ -4,7 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.time.ZonedDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class FeedRoot(val total: Int, val ads: List<FeedAd>)
+data class FeedRoot(val content: List<FeedAd>,
+                    val totalElements: Int,
+                    val number: Int,
+                    val size: Int) {
+    val totalPages: Int = totalElements / size
+    val first: Boolean = number == 0
+    val last: Boolean = number == totalPages
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FeedAd(val uuid: String,
@@ -14,8 +21,6 @@ data class FeedAd(val uuid: String,
                   val expires: ZonedDateTime,
                   val locations: List<FeedLocation>,
                   val title: String,
-                  val source: String,
-                  val medium: String,
                   val reference: String,
                   val employer: String,
                   val adtext: String?,
@@ -26,7 +31,11 @@ data class FeedAd(val uuid: String,
                   val occupation: String?,
                   val positioncount: Int?,
                   val sector: String?,
-                  val industry: String?)
+                  val industry: String?) {
+
+    var ur: String = System.getenv("arbeidsplassen_url") ?: "default_value"
+    val url: String = "/stillinger/stilling/$uuid"
+}
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FeedLocation(val country: String,
