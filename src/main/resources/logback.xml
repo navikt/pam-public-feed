@@ -1,12 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="true">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%level %logger %msg %n</pattern>
+        </encoder>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeCallerData>true</includeCallerData>
+        </encoder>
     </appender>
 
-    <logger name="org.hibernate.engine.internal.StatisticalLoggingSessionEventListener" level="OFF" />
+    <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
 
-    <root level="INFO">
-        <appender-ref ref="stdout_json" />
+    <logger name="no.nav" level="DEBUG"/>
+
+    <root level="debug">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="METRICS"/>
     </root>
+
 </configuration>

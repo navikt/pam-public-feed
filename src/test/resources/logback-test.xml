@@ -1,14 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="true">
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date [%-5level] [%thread] %logger{5} - %m%n</pattern>
+            <pattern>%green(%d{HH:mm:ss}) %cyan([%-5.5t]) %boldCyan(%0.-5p) %yellow(%-20.20logger{19}) %cyan(:) %m%n
+            </pattern>
         </encoder>
     </appender>
 
-    <logger name="no.nav" level="INFO"/>
+    <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
 
-    <root level="INFO">
+    <logger name="no.nav" level="DEBUG"/>
+
+    <root level="debug">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="METRICS"/>
     </root>
+
 </configuration>

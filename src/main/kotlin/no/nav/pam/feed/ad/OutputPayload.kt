@@ -33,7 +33,6 @@ data class FeedAd(val uuid: String,
                   val sector: String?,
                   val industry: String?) {
 
-    var ur: String = System.getenv("arbeidsplassen_url") ?: "default_value"
     val url: String = "/stillinger/stilling/$uuid"
 }
 
