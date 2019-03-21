@@ -1,12 +1,7 @@
 package no.nav.pam.feed.ad
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.application.call
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JacksonSerializer
-import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.content.TextContent
@@ -20,16 +15,7 @@ import kotlinx.coroutines.async
 fun Routing.feed(
 
         searchApiHost: String = "https://pam-search-api.nais.oera-q.local",
-        clientFactory: () -> HttpClient = {
-            HttpClient(Apache) {
-                install(JsonFeature) {
-                    serializer = JacksonSerializer {
-                        registerModule(JavaTimeModule())
-                        registerModule(KotlinModule())
-                    }
-                }
-            }
-        }
+        clientFactory: () -> HttpClient
 ) {
     get("/api/feed") {
         clientFactory().use { it ->
@@ -71,21 +57,14 @@ fun Routing.feed(
                  }""".trimIndent()
 
 
-//                val searchRequest = async {
-//                    it.post<SearchResponseRoot> {
-//                        url("$searchApiHost/ad/_search")
-//                        body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
-//                    }
-//                }.await()
                 val searchRequest = async {
-                    it.post<String> {
+                    it.post<SearchResponseRoot> {
                         url("$searchApiHost/ad/_search")
                         body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
                     }
                 }.await()
 
-                //call.respond(mapResult(searchRequest))
-                call.respond(searchRequest)
+                call.respond(mapResult(searchRequest))
             } catch (e: NumberFormatException) {
                 call.respond(HttpStatusCode.BadRequest, "One of parameters has wrong format")
             }

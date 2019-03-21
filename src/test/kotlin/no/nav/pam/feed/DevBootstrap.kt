@@ -1,5 +1,7 @@
 package no.nav.pam.feed
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
@@ -18,7 +20,10 @@ val acceptInsecureSslClientFactory: () -> HttpClient = {
 
         }
         install(JsonFeature) {
-            serializer = JacksonSerializer()
+            serializer = JacksonSerializer {
+                registerModule(JavaTimeModule())
+                registerModule(KotlinModule())
+            }
         }
     }
 }

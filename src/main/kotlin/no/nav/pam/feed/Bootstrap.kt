@@ -8,6 +8,8 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.application.install
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
+import io.ktor.client.features.json.JacksonSerializer
+import io.ktor.client.features.json.JsonFeature
 import io.ktor.features.ContentNegotiation
 import io.ktor.jackson.jackson
 import io.ktor.routing.routing
@@ -26,7 +28,16 @@ fun main(args: Array<String>) {
 
 fun webApplication(
         port: Int = 9021,
-        clientFactory: () -> HttpClient = { HttpClient(Apache) },
+        clientFactory: () -> HttpClient = {
+            HttpClient(Apache) {
+                install(JsonFeature) {
+                    serializer = JacksonSerializer {
+                        registerModule(JavaTimeModule())
+                        registerModule(KotlinModule())
+                    }
+                }
+            }
+        },
         environment: Environment = Environment()
 ): ApplicationEngine {
     return embeddedServer(Netty, port) {
