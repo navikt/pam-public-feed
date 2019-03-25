@@ -1,6 +1,7 @@
 package no.nav.pam.feed.ad
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZonedDateTime
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,6 +15,7 @@ data class FeedRoot(val content: List<FeedAd>,
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedAd(val uuid: String,
 //                  val created: ZonedDateTime,
 //                  val updated: ZonedDateTime,
@@ -23,8 +25,8 @@ data class FeedAd(val uuid: String,
                   val title: String,
                   val reference: String,
                   val employer: String,
-                  val adtext: String?,
-                  val sourceurl: String?,
+                  val description: String?,
+                  val sourceLink: String?,
                   val applicationdue: String?,
 //                  val engagementtype: String?,
 //                  val extent: String?,
@@ -33,10 +35,11 @@ data class FeedAd(val uuid: String,
 //                  val sector: String?,
                   val industry: String?) {
 
-    val url: String = "/stillinger/stilling/$uuid"
+    val link: String = "/stillinger/stilling/$uuid"
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedLocation(val country: String,
                         val address: String?,
                         val city: String?,
