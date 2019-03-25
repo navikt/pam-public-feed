@@ -37,8 +37,6 @@ data class FeedAd(val uuid: String,
 //                  val positioncount: Int?,
 //                  val sector: String?,
                   val industry: String?) {
-
-    val testurl: String = env.arbeidsplassenHost
     val link: String = "/stillinger/stilling/$uuid"
 }
 
