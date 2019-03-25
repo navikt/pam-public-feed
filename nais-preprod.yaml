@@ -6,6 +6,10 @@ metadata:
   labels:
     team: teampam
 spec:
+  containers:
+    env:
+      - name: arbeidsplassen_url
+        value: "https://arbeidsplassen.nav.no"
   image: repo.adeo.no:5443/pam-public-feed
   port: 9021
   replicas:

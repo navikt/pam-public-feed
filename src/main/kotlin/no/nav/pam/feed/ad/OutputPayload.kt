@@ -2,7 +2,10 @@ package no.nav.pam.feed.ad
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
+import no.nav.pam.feed.Environment
 import java.time.ZonedDateTime
+
+val env: Environment = Environment()
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FeedRoot(val content: List<FeedAd>,
@@ -35,6 +38,7 @@ data class FeedAd(val uuid: String,
 //                  val sector: String?,
                   val industry: String?) {
 
+    val testurl: String = env.arbeidsplassenHost
     val link: String = "/stillinger/stilling/$uuid"
 }
 
