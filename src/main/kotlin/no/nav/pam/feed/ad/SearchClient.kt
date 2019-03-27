@@ -21,7 +21,7 @@ fun Routing.feed(
         clientFactory().use { it ->
             try {
                 val page = call.parameters["page"]?.toInt() ?: 0
-                val size = call.parameters["size"]?.takeIf { x -> x?.toInt() in 1..100 }?.toInt() ?: 100
+                val size = call.parameters["size"]?.takeIf { x -> x.toInt() in 1..100 }?.toInt() ?: 100
                 val from = page * size
                 val requestBody = """{
                 "sort": [{"published": "desc"}],
