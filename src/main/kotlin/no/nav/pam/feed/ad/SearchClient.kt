@@ -59,7 +59,7 @@ fun Routing.feed(
 
                 call.respond(mapResult(searchRequest, page, size))
             } catch (e: NumberFormatException) {
-                call.respond(HttpStatusCode.BadRequest, "One of parameters has wrong format")
+                call.respond(HttpStatusCode.BadRequest, "One of the parameters has wrong format")
             }
         }
     }
