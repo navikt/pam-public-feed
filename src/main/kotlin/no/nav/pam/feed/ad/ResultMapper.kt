@@ -14,23 +14,16 @@ fun mapAd(source: Source): FeedAd {
 
     return FeedAd(
             source.uuid,
-//            source.created,
-//            source.updated,
             source.published,
             source.expires,
             locations,
             source.title,
-            source.reference,
             employer ?: "",
+            source.properties["employerdescription"],
             source.properties["adtext"],
             source.properties["sourceurl"],
             source.properties["applicationdue"],
-//            source.properties["engagementtype"],
-//            source.properties["extent"],
-            source.properties["occupation"],
-//            source.properties["positioncount"]?.toInt() ?: null,
-//            source.properties["sector"],
-            source.properties["industry"]
+            source.properties["occupation"]
     )
 }
 

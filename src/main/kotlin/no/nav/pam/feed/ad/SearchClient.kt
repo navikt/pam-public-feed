@@ -36,20 +36,13 @@ fun Routing.feed(
                      "expires",
                      "locationList",
                      "title",
-                     "source",
-                     "medium",
-                     "reference",
                      "businessName",
                      "properties.adtext",
                      "properties.sourceurl",
                      "properties.applicationdue",
-                     "properties.engagementtype",
-                     "properties.extent",
                      "properties.occupation",
-                     "properties.positioncount",
-                     "properties.sector",
-                     "properties.industry",
-                     "properties.employer"
+                     "properties.employer",
+                     "properties.employerdescription"
                      ],
                    "excludes": [ ]
                  },

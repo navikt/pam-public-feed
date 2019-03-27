@@ -29,9 +29,6 @@ data class Source(val uuid: String,
                   @JsonDeserialize(using = CustomDateTimeDeserializer::class)
                   val expires: ZonedDateTime,
                   val title: String,
-                  val source: String,
-                  val medium: String,
-                  val reference: String,
                   val businessName: String?,
                   @JsonProperty("locationList") val locations: List<Location>,
                   val properties: Map<String, String>)

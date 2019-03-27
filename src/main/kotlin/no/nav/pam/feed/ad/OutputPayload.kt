@@ -20,23 +20,16 @@ data class FeedRoot(val content: List<FeedAd>,
 @JsonIgnoreProperties(ignoreUnknown = true)
 //@JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedAd(val uuid: String,
-//                  val created: ZonedDateTime,
-//                  val updated: ZonedDateTime,
                   val published: ZonedDateTime,
                   val expires: ZonedDateTime,
                   val workLocations: List<FeedLocation>,
                   val title: String,
-                  val reference: String,
                   val employer: String,
+                  val employerDescription: String?,
                   val description: String?,
                   val sourceLink: String?,
                   val applicationdue: String?,
-//                  val engagementtype: String?,
-//                  val extent: String?,
-                  val occupation: String?,
-//                  val positioncount: Int?,
-//                  val sector: String?,
-                  val industry: String?) {
+                  val occupation: String?) {
     val link: String = "/stillinger/stilling/$uuid"
 }
 
