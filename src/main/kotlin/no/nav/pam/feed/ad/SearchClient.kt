@@ -7,6 +7,7 @@ import io.ktor.client.request.url
 import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.request.host
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.get
@@ -57,7 +58,7 @@ fun Routing.feed(
                     }
                 }.await()
 
-                call.respond(mapResult(searchRequest, page, size))
+                call.respond(mapResult(searchRequest, page, size, call.request.host()))
             } catch (e: NumberFormatException) {
                 call.respond(HttpStatusCode.BadRequest, "One of the parameters has wrong format")
             }

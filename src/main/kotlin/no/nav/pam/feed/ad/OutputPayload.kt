@@ -29,9 +29,8 @@ data class FeedAd(val uuid: String,
                   val description: String?,
                   val sourceLink: String?,
                   val applicationdue: String?,
-                  val occupation: String?) {
-    val link: String = "/stillinger/stilling/$uuid"
-}
+                  val occupation: String?,
+                  val link: String)
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

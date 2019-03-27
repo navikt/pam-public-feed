@@ -1,16 +1,17 @@
 package no.nav.pam.feed.ad
 
 
-fun mapResult(root: SearchResponseRoot, page: Int, size: Int): FeedRoot {
-    val adList = root.hits.hits.map { element -> mapAd(element.source) }
+fun mapResult(root: SearchResponseRoot, page: Int, size: Int, host: String?): FeedRoot {
+    val adList = root.hits.hits.map { element -> mapAd(element.source, host) }
 
     return FeedRoot(adList, root.hits.total, page, size)
 }
 
-fun mapAd(source: Source): FeedAd {
+fun mapAd(source: Source, host: String?): FeedAd {
 
     val locations = source.locations.map { l -> mapLocation(l) }
     var employer = source.businessName ?: source.properties["employer"]
+    var link = "https://$host/stillinger/stilling/${source.uuid}"
 
     return FeedAd(
             source.uuid,
@@ -23,7 +24,8 @@ fun mapAd(source: Source): FeedAd {
             source.properties["adtext"],
             source.properties["sourceurl"],
             source.properties["applicationdue"],
-            source.properties["occupation"]
+            source.properties["occupation"],
+            link
     )
 }
 
