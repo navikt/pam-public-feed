@@ -24,7 +24,7 @@ fun mapAd(source: Source, host: String?): FeedAd {
             source.properties["adtext"],
             source.properties["sourceurl"],
             source.properties["applicationdue"],
-            source.properties["occupation"],
+            populateOccupations(source),
             link
     )
 }
@@ -38,4 +38,20 @@ fun mapLocation(sourceLocation: Location): FeedLocation {
             sourceLocation.county,
             sourceLocation.municipal
     )
+}
+
+fun populateOccupations(source: Source): List<String> {
+    val occupations = arrayListOf<String>()
+
+    if (source.source.toUpperCase() == "DIR") {
+        for (category in source.categories) {
+            occupations.add(category.name)
+        }
+    } else {
+        if (source.properties["jobtitle"] != null) {
+            occupations.add(source.properties["jobtitle"]!!)
+        }
+    }
+
+    return occupations
 }

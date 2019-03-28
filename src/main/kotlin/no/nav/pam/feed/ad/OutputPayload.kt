@@ -27,9 +27,9 @@ data class FeedAd(val uuid: String,
                   val employer: String,
                   val employerDescription: String?,
                   val description: String?,
-                  val sourceLink: String?,
-                  val applicationdue: String?,
-                  val occupation: String?,
+                  val source: String?,
+                  val applicationDue: String?,
+                  val occupations: List<String>,
                   val link: String)
 
 @JsonIgnoreProperties(ignoreUnknown = true)

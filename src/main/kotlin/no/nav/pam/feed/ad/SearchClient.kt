@@ -38,12 +38,14 @@ fun Routing.feed(
                      "locationList",
                      "title",
                      "businessName",
+                     "source",
                      "properties.adtext",
                      "properties.sourceurl",
                      "properties.applicationdue",
-                     "properties.occupation",
                      "properties.employer",
-                     "properties.employerdescription"
+                     "properties.employerdescription",
+                     "properties.jobtitle",
+                     "categoryList.name"
                      ],
                    "excludes": [ ]
                  },
