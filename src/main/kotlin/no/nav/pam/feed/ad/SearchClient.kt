@@ -44,6 +44,7 @@ fun Routing.feed(
                      "properties.applicationdue",
                      "properties.employer",
                      "properties.employerdescription",
+                     "properties.occupation",
                      "properties.jobtitle",
                      "categoryList.name"
                      ],

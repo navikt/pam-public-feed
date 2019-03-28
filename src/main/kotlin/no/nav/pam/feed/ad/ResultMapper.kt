@@ -48,7 +48,9 @@ fun populateOccupations(source: Source): List<String> {
             occupations.add(category.name)
         }
     } else {
-        if (source.properties["jobtitle"] != null) {
+        if (source.properties["occupation"] != null) {
+            occupations.addAll(source.properties["occupation"]!!.split(";"))
+        } else if (source.properties["jobtitle"] != null) {
             occupations.add(source.properties["jobtitle"]!!)
         }
     }
