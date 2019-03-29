@@ -11,6 +11,8 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.features.ContentNegotiation
+import io.ktor.features.DefaultHeaders
+import io.ktor.http.HttpHeaders
 import io.ktor.jackson.jackson
 import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
@@ -52,6 +54,9 @@ fun webApplication(
                 registerModule(KotlinModule())
                 configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             }
+        }
+        install(DefaultHeaders) {
+            header(HttpHeaders.CacheControl, "public, max-age=600")
         }
         routing {
             naisApi()
