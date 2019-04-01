@@ -18,7 +18,7 @@ fun Routing.naisApi(
         collectorRegistry: CollectorRegistry = CollectorRegistry.defaultRegistry
 ) {
     DefaultExports.initialize()
-    get("isReady") {
+    get("/internal/isReady") {
         if (ready())
             call.respondText("Ready")
         else
@@ -26,14 +26,14 @@ fun Routing.naisApi(
 
     }
 
-    get("isAlive") {
+    get("/internal/isAlive") {
         if (alive())
             call.respondText("I'm alive!")
         else
             call.respondText("Dead!", status = HttpStatusCode.InternalServerError)
     }
 
-    get("/prometheus") {
+    get("/internal/prometheus") {
         val names = call.request.queryParameters.getAll("name[]")?.toSet() ?: setOf()
         call.respondTextWriter(ContentType.parse(TextFormat.CONTENT_TYPE_004)) {
             TextFormat.write004(this, collectorRegistry.filteredMetricFamilySamples(names))

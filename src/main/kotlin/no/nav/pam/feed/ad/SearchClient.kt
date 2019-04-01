@@ -18,7 +18,7 @@ fun Routing.feed(
         searchApiHost: String = "https://pam-search-api.nais.oera-q.local",
         clientFactory: () -> HttpClient
 ) {
-    get("/api/feed") {
+    get("/api/v1/ads") {
         clientFactory().use { it ->
             try {
                 val page = call.parameters["page"]?.toInt() ?: 0

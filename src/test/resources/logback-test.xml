@@ -8,8 +8,6 @@
         </encoder>
     </appender>
 
-    <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
-
     <logger name="no.nav" level="DEBUG"/>
 
     <root level="debug">
