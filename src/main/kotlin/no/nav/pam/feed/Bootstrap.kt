@@ -72,7 +72,7 @@ object Bootstrap {
     private val log = KotlinLogging.logger { }
 
     fun start(webApplication: ApplicationEngine) {
-        log.debug("Starting weg application")
+        log.debug("Starting web application")
         webApplication.start(wait = true)
     }
 }

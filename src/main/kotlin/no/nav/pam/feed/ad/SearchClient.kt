@@ -56,7 +56,7 @@ fun Routing.feed(
 
                 val searchRequest = async {
                     it.post<SearchResponseRoot> {
-                        url("$searchApiHost/ad/_search")
+                        url("$searchApiHost/public-feed/ad/_search")
                         body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
                     }
                 }.await()
