@@ -186,6 +186,14 @@
         <tag>HEAD</tag>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>kotlinx</id>
+            <name>kotlinx</name>
+            <url>https://dl.bintray.com/kotlin/kotlinx/</url>
+        </repository>
+    </repositories>
+
     <distributionManagement>
         <repository>
             <id>m2internal</id>
