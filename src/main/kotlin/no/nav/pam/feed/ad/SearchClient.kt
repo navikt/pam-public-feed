@@ -13,16 +13,19 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import kotlinx.coroutines.async
 
+const internal val MAX_TOTAL_HITS = 500
+
 fun Routing.feed(
 
         searchApiHost: String = "https://pam-search-api.nais.oera-q.local",
         clientFactory: () -> HttpClient
 ) {
     get("/api/v1/ads") {
-        clientFactory().use { it ->
+        clientFactory().use { client ->
             try {
-                val page = call.parameters["page"]?.toInt()?.takeIf { p -> p >= 0 } ?: 0
-                val size = call.parameters["size"]?.toInt()?.takeIf { x -> x in 1..100 } ?: 50
+                val size = (call.parameters["size"]?.toInt() ?: 50).let { Math.min(Math.max(it, 1), 100) }
+                val page = (call.parameters["page"]?.toInt() ?: 0).let { Math.min(Math.max(it, 0), MAX_TOTAL_HITS / size) }
+
                 val from = page * size
                 val requestBody = """{
                 "sort": [{"published": "desc"}],
@@ -56,11 +59,11 @@ fun Routing.feed(
                    "excludes": [ ]
                  },
                  "from": $from,
-                 "size": $size
+                 "size": ${Math.min(size, MAX_TOTAL_HITS - from)}
                  }""".trimIndent()
 
                 val searchRequest = async {
-                    it.post<SearchResponseRoot> {
+                    client.post<SearchResponseRoot> {
                         url("$searchApiHost/public-feed/ad/_search")
                         body = TextContent(text = requestBody, contentType = ContentType.Application.Json)
                     }

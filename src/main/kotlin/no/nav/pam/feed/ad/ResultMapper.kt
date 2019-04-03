@@ -3,8 +3,9 @@ package no.nav.pam.feed.ad
 
 fun mapResult(root: SearchResponseRoot, page: Int, size: Int, host: String?): FeedRoot {
     val adList = root.hits.hits.map { element -> mapAd(element.source, host) }
+    val total = root.hits.total.takeIf { x -> x in 0..MAX_TOTAL_HITS } ?: MAX_TOTAL_HITS
 
-    return FeedRoot(adList, root.hits.total, page, size)
+    return FeedRoot(adList, total, page, size)
 }
 
 fun mapAd(source: Source, host: String?): FeedAd {
