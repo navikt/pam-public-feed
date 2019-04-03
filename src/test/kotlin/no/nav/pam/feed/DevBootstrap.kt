@@ -6,6 +6,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
+import mu.KotlinLogging
 import org.apache.http.conn.ssl.NoopHostnameVerifier
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy
 import org.apache.http.ssl.SSLContextBuilder
@@ -29,10 +30,14 @@ val acceptInsecureSslClientFactory: () -> HttpClient = {
 }
 
 val localTestEnvironment: Environment = Environment(
-        searchApiHost = "https://pam-search-api.nais.oera-q.local"
+        searchApiHost =  getEnvVar("SEARCH_API_HOST", "https://pam-search-api.nais.oera-q.local")
 )
 
 fun main(args: Array<String>) {
+
+    val logger = KotlinLogging.logger{}
+
+    logger.debug("Using search API host: ${localTestEnvironment.searchApiHost}")
 
     Bootstrap.start(webApplication(
             clientFactory = acceptInsecureSslClientFactory,
