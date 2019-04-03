@@ -14,6 +14,7 @@ data class FeedRoot(val content: List<FeedAd>,
     val totalPages: Int = totalElements / size
     val first: Boolean = number == 0
     val last: Boolean = number == totalPages
+    val sort: String = "published:desc"
 }
 
 //@JsonInclude(JsonInclude.Include.NON_NULL)

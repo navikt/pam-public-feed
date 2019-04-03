@@ -27,7 +27,12 @@ fun Routing.feed(
                 val requestBody = """{
                 "sort": [{"published": "desc"}],
                 "query": {
-                   "term": {"status": "ACTIVE"}},
+                   "constant_score": {
+                     "filter": {
+                       "term": {"status": "ACTIVE"}
+                     }
+                   }
+                 },
                  "_source": {
                    "includes": [
                      "uuid",
