@@ -1,11 +1,7 @@
 package no.nav.pam.feed.ad
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import no.nav.pam.feed.Environment
 import java.time.ZonedDateTime
-
-val env: Environment = Environment()
-
 
 data class FeedRoot(val content: List<FeedAd>,
                     val totalElements: Int,
