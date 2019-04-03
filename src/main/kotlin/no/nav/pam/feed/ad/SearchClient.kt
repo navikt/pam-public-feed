@@ -21,8 +21,8 @@ fun Routing.feed(
     get("/api/v1/ads") {
         clientFactory().use { it ->
             try {
-                val page = call.parameters["page"]?.toInt() ?: 0
-                val size = call.parameters["size"]?.takeIf { x -> x.toInt() in 1..100 }?.toInt() ?: 100
+                val page = call.parameters["page"]?.toInt()?.takeIf { p -> p >= 0 } ?: 0
+                val size = call.parameters["size"]?.toInt()?.takeIf { x -> x in 1..100 } ?: 50
                 val from = page * size
                 val requestBody = """{
                 "sort": [{"published": "desc"}],
@@ -63,7 +63,7 @@ fun Routing.feed(
 
                 call.respond(mapResult(searchRequest, page, size, call.request.host()))
             } catch (e: NumberFormatException) {
-                call.respond(HttpStatusCode.BadRequest, "One of the parameters has wrong format")
+                call.respond(HttpStatusCode.BadRequest, "Bad numeric parameter value: ${e.message}")
             }
         }
     }
