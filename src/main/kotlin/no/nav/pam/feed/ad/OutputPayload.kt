@@ -5,11 +5,11 @@ import java.time.ZonedDateTime
 
 data class FeedRoot(val content: List<FeedAd>,
                     val totalElements: Int,
-                    val number: Int,
-                    val size: Int) {
-    val totalPages: Int = totalElements / size
-    val first: Boolean = number == 0
-    val last: Boolean = number == totalPages
+                    val pageNumber: Int,
+                    val pageSize: Int) {
+    val totalPages: Int = totalElements / pageSize
+    val first: Boolean = pageNumber == 0
+    val last: Boolean = pageNumber == totalPages
     val sort: String = "published:desc"
 }
 
