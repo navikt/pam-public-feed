@@ -13,7 +13,7 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import kotlinx.coroutines.async
 
-const internal val MAX_TOTAL_HITS = 500
+const internal val MAX_TOTAL_HITS = 5000
 
 fun Routing.feed(
 
