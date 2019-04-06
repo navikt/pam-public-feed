@@ -37,10 +37,6 @@ val localTestEnvironment: Environment = Environment(
 
 fun main(args: Array<String>) {
 
-    val logger = KotlinLogging.logger{}
-
-    logger.info("Using search API host: ${localTestEnvironment.searchApiHost}")
-
     Bootstrap.start(webApplication(
             clientFactory = acceptInsecureSslClientFactory,
             environment = localTestEnvironment))

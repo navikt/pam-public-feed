@@ -25,6 +25,8 @@ fun Route.feed(
         searchApiHost: String,
         clientFactory: () -> HttpClient
 ) {
+    log.info("Using search API host: ${searchApiHost}")
+
     get("/api/v1/ads") {
         clientFactory().use { client ->
             try {
