@@ -30,14 +30,16 @@ val acceptInsecureSslClientFactory: () -> HttpClient = {
 }
 
 val localTestEnvironment: Environment = Environment(
-        searchApiHost =  getEnvVar("SEARCH_API_HOST", "https://pam-search-api.nais.oera-q.local")
+        searchApiHost =  getEnvVar("SEARCH_API_HOST", "https://pam-search-api.nais.oera-q.local"),
+        indentJson = true,
+        auth = AuthConfig(optional = true, secret = getEnvVar("AUTH_SECRET", "dev-key"))
 )
 
 fun main(args: Array<String>) {
 
     val logger = KotlinLogging.logger{}
 
-    logger.debug("Using search API host: ${localTestEnvironment.searchApiHost}")
+    logger.info("Using search API host: ${localTestEnvironment.searchApiHost}")
 
     Bootstrap.start(webApplication(
             clientFactory = acceptInsecureSslClientFactory,
