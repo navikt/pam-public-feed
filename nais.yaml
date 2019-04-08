@@ -23,6 +23,6 @@ spec:
     path: /internal/prometheus
   webproxy: true
   vault:
-    enabled: false
+    enabled: true
   ingresses:
     - https://pam-public-feed.nais.oera.no
