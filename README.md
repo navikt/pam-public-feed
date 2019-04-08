@@ -18,7 +18,7 @@ The feed API requires authentication using the `Authorization` header, type
 2. Log/register generated token and email (Confluence page).
 
 3. Supply customer with information about the `Authorization` header value from
-   output in step 2.
+   output in step 1.
 
 ## Get informaation about an existing token
 
