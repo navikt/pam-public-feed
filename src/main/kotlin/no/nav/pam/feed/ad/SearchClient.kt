@@ -54,7 +54,8 @@ fun Routing.feed(
                      "properties.employerdescription",
                      "properties.occupation",
                      "properties.jobtitle",
-                     "categoryList"
+                     "categoryList",
+                     "employer"
                      ],
                    "excludes": [ ]
                  },
