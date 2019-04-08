@@ -31,7 +31,6 @@ fun mapEmployer(source: Source): FeedEmployer {
     return FeedEmployer(
             source.businessName ?: source.employer.let { e -> e?.name ?: "" },
             source.employer.let { e -> e?.orgnr },
-            source.employer.let { e -> e?.parentOrgnr },
             source.properties["employerdescription"]
     )
 }

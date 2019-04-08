@@ -37,5 +37,4 @@ data class FeedLocation(val country: String,
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedEmployer(val name: String,
                         val orgnr: String?,
-                        val parentOrgnr: String?,
-                        val employerDescription: String?)
+                        val description: String?)
