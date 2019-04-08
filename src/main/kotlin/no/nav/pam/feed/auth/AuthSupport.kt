@@ -68,9 +68,10 @@ fun Route.tokenManagementApi (tokenFactory: JwtTokenFactory) {
 
     post("newApiToken") {
         try {
-            val subject = call.receiveParameters().get("subject")
+            val params = call.receiveParameters()
+            val subject = params.get("subject")
             if (subject == null) {
-                call.respond(HttpStatusCode.BadRequest, "Missing form parameter 'subject'\n")
+                call.respond(HttpStatusCode.BadRequest, "Missing required form parameter 'subject'\n")
                 return@post
             }
 
