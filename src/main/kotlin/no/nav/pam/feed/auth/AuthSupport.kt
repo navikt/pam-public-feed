@@ -107,7 +107,7 @@ fun Route.tokenManagementApi (tokenFactory: JwtTokenFactory) {
             }
 
             val newToken = tokenFactory.newTokenFor(subject, expires)
-            log.info("New token created for subject '$subject': $newToken")
+            log.info("New token created for subject '$subject'")
             call.respondText("For subject: ${subject}\nAuthorization: Bearer ${newToken}\n")
         } catch (e: Exception) {
             call.respond(HttpStatusCode.BadRequest, "Bad form data\n")
