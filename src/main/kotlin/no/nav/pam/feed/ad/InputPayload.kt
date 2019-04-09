@@ -31,6 +31,7 @@ data class Source(val uuid: String,
                   val title: String,
                   val businessName: String?,
                   val source: String,
+                  val employer: Employer?,
                   @JsonProperty("locationList") val locations: List<Location>,
                   @JsonProperty("categoryList") val categories: List<Category>,
                   val properties: Map<String, String>)
@@ -45,6 +46,11 @@ data class Location(val country: String,
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Category(val name: String)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Employer(val name: String,
+                    val orgnr: String?,
+                    val parentOrgnr: String?)
 
 class CustomDateTimeDeserializer : StdDeserializer<ZonedDateTime>(ZonedDateTime::class.java) {
     override fun deserialize(jp: JsonParser, ctxt: DeserializationContext): ZonedDateTime {

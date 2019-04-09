@@ -9,10 +9,8 @@ fun mapResult(root: SearchResponseRoot, page: Int, size: Int, host: String?): Fe
 }
 
 fun mapAd(source: Source, host: String?): FeedAd {
-
     val locations = source.locations.map { l -> mapLocation(l) }
-    var employer = source.businessName ?: source.properties["employer"]
-    var link = "https://$host/stillinger/stilling/${source.uuid}"
+    val link = "https://$host/stillinger/stilling/${source.uuid}"
 
     return FeedAd(
             source.uuid,
@@ -20,13 +18,20 @@ fun mapAd(source: Source, host: String?): FeedAd {
             source.expires,
             locations,
             source.title,
-            employer ?: "",
-            source.properties["employerdescription"],
             source.properties["adtext"],
             source.properties["sourceurl"],
             source.properties["applicationdue"],
             populateOccupations(source),
-            link
+            link,
+            mapEmployer(source)
+    )
+}
+
+fun mapEmployer(source: Source): FeedEmployer {
+    return FeedEmployer(
+            source.businessName ?: source.employer.let { e -> e?.name ?: "" },
+            source.employer.let { e -> e?.orgnr },
+            source.properties["employerdescription"]
     )
 }
 
