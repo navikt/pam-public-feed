@@ -15,10 +15,22 @@ The feed API requires authentication using the `Authorization` header, type
     
     where `EMAIL` is the email address provided as customer contact information.
     
-2. Log/register generated token and email (Confluence page).
+    This token will never expire and is valid for as long as secret key is kept
+    unchanged.
+    
+2. Log/register the customer email (TODO link to some Confluence page).
 
 3. Supply customer with information about the `Authorization` header value from
    output in step 1.
+   
+## Create token with expiry
+
+If desireable, an expiry date can be set on generated tokens. Such tokens will
+stop working after the expiry date.
+
+Call:
+
+    curl https://pam-public-feed.nais.oera.no/public-feed/internal/newApiToken -d subject=EMAIL -d expires=2020-01-01
 
 ## Get informaation about an existing token
 
@@ -34,4 +46,5 @@ token, then responds:
     Subject:      contact@some-customer.com
     Issuer:       nav.no
     Issued at:    Sun Apr 07 20:28:18 CEST 2019
+    Expires:      not set
     Verification: OK
