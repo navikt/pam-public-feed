@@ -145,6 +145,54 @@
             "employer": "Ulvik herad",
             "employerdescription": "<p>.</p>\n",
             "adtext": "<p>Helse - og omsorg i Ulvik er i utvikling for å imøtekomme framtida sine utfordringar. Utviklinga vil påverka korleis fysioterapitenesta blir i framtida. I dag har me ein fysioterapeut på 100% drifstilskot. No har me ein ledig 100% kommunal stilling for fysioterapeut. I framtida skal me ha 2 fysioterapeutar i kvar sin 100% kommunale stilling. Dette med forbehold om vedtak i heradstyret 10. april 2019.</p>\n<p>Me har mange spanande utfordringar føre oss og ser etter ein fysioterapeut som likar varierte oppgåver, er fleksibel og som ynskjer å påverke utforminga av fysioterapitenestene i Ulvik herad.</p>\n<p>Me byggjer ny sjukeheim. Her vil fysioterapeuten få delta i utforming av treningsrom. I tillegg har kommunen eige lokale for kurativ behandling i Ulvik sentrum. Ny fysioterapeut vil inngå i eit tett samarbeid med helsestasjon, skulehelseteneste, rehabilitering, tverrfaglige team og ulike prosjekt. Stillinga skal bli ei fast 100% stilling før sommaren 2019.</p>\n<p>Sentrale arbeidsoppgåver</p>\n<ul><li>Setje seg inn i og følgje opp retningslinjer og planar for fysioterapitenesta i heradet.</li><li>Drive eit aktivt tilbod om fysioterapi for ulike pasientgrupper etter behov</li><li>Samarbeid med helsestasjon og skolehelseteneste, kommunelege og institusjon</li><li>Samarbeid med fysio- og ergoterapitenesta og andre aktuelle samarbeidspartnarar.</li><li>Utøve kunnskapsbasert fysioterapi.</li><li>Bidra i utvikling av fysio- og ergoterapitjenesten og til ein kvar tid være fagleg oppdatert.</li><li>Det må påreknast behandling heime hjå brukar</li></ul>\n<p>Person- og kompetansekrav</p>\n<ul><li>Offentleg godkjend fysioterapeut.</li><li>Du må ha god skriftleg og munnleg framstillingsevne.</li><li>Du må vera fleksibel, fagleg engasjert, løysningsorientert og ha gode kommunikasjonsevner.</li><li>Du må ha evne til å jobbe i team og ha erfaring med å jobbe tverrfagleg.</li><li>Personlege eigenskapar vil bli vektlagt</li></ul>\n<p>Me kan tilby:</p>\n<ul><li>Eit godt arbeidsmiljø</li><li>Ei verksemd i utvikling</li><li>Fagleg utvikling</li><li>Utfordrande arbeidsoppgåver</li><li>Fleksibel arbeidstid</li><li>Konkurransedyktig løn</li></ul>\n<p>Ulvik herad kan tilby barnehageplass, firmahytte og gode avtalar ved Ulvik treningssenter. Me kan hjelpa til med å skaffe bustad.</p>\n<p>Søknadsfrist innen 12. april 2019.</p>\n<p>Ulvik herad er opptatt av å reflektere mangfaldet i befolkninga og oppmodar alle kvalifiserte kandidatar til å søke, uavhengig av alder, kjønn, nedsett funksjonsevne, nasjonal eller etnisk bakgrunn.</p>\n<p>Har du ynskje om unntatt offentligheit må dettegrunngjevast i søknaden, jf. offentleglova § 25, andre ledd. Du varslas dersom ønsket ikkje kan tas til følge. Politiattest jf. Helse- og omsorgstjenesteloven § 5-4 må framlegges ved tilsetting.</p>\n<p>Tilsetjing vil skje på dei vilkår og med dei plikter som føl av gjeldande lovverk, reglement og tariffavtaler.</p>\n<p><a href=\"https://www.ulvik.kommune.no/sjolvbetening/\" rel=\"nofollow\">Søknad sendes elektronisk</a> via vår nettside stilling ledig. Dersom du har behov for bistand i søknadsprosessen, ta kontakt med helse - og omsorgsleiar tlf. 4000 7151</p>\n"
+          },
+          "employer": {
+            "id": 10991,
+            "uuid": "55f7dbe4-91d4-4b5c-8e57-b5b1c3a13c63",
+            "createdBy": "pam-ad",
+            "updatedBy": "pam-ad",
+            "created": "2018-05-23T19:44:40.187+02:00",
+            "updated": "2019-04-08T07:06:02.905+02:00",
+            "contactList": [],
+            "mediaList": [],
+            "location": {
+              "address": "Høgslundveien 49",
+              "postalCode": "2020",
+              "country": "NORGE",
+              "county": "AKERSHUS",
+              "municipal": "SKEDSMO",
+              "city": "SKEDSMOKORSET",
+              "latitude": null,
+              "longitude": null
+            },
+            "locationList": [
+              {
+                "address": "Høgslundveien 49",
+                "postalCode": "2020",
+                "country": "NORGE",
+                "county": "AKERSHUS",
+                "municipal": "SKEDSMO",
+                "city": "SKEDSMOKORSET",
+                "latitude": null,
+                "longitude": null
+              }
+            ],
+            "properties": {
+              "nace2": [
+                {
+                  "code": "46.691",
+                  "name": "Engroshandel med maskiner og utstyr til kraftproduksjon og installasjon"
+                }
+              ]
+            },
+            "name": "TEST COMPANY NAME",
+            "orgnr": "979821506",
+            "status": "ACTIVE",
+            "parentOrgnr": "979692900",
+            "publicName": "TEST COMPANY NAME",
+            "deactivated": null,
+            "orgform": "BEDR",
+            "employees": 205
           }
         },
         "sort": [
