@@ -23,6 +23,8 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.net.ServerSocket
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 private val log = KotlinLogging.logger {}
@@ -79,50 +81,73 @@ class ApiTest {
 
     @Test
     fun testNewApiToken() {
-        runBlocking<HttpResponse> {
+        runBlocking {
             httpClient.submitForm<HttpResponse>(TestServices.appUrl + "/public-feed/internal/newApiToken",
                     Parameters.build { append("subject", "test@test") })
         }.also { assertTrue(it.status.isSuccess()) }
     }
 
     @Test
-    fun testNoApiToken() {
-        runBlocking<HttpResponse> {
-            httpClient.get(TestServices.appUrl + "/public-feed/api/v1/ads")
+    fun testFeedWithValidApiToken() {
+        val tokenValue = obtainApiTokenValue()
+
+        runBlocking {
+            httpClient.get<HttpResponse>(ApiTest.appUrl + "/public-feed/api/v1/ads") {
+                header("Authorization", "Bearer ${tokenValue}")
+            }
+        }.also { assertTrue(it.status.isSuccess())}
+    }
+
+    @Test
+    fun testFeedWithValidTokenFutureExpiry() {
+        val futureExpiryToken = obtainApiTokenValue(expires = LocalDateTime.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+
+        runBlocking {
+            httpClient.get<HttpResponse>(TestServices.appUrl + "/public-feed/api/v1/ads") {
+                header("Authorization", "Bearer ${futureExpiryToken}")
+            }
+        }.also { assertTrue(it.status.isSuccess()) }
+    }
+
+    @Test
+    fun testFeedWithExpiredToken() {
+        val expiredToken = obtainApiTokenValue(expires = "2018-01-01")
+
+        runBlocking {
+            httpClient.get<HttpResponse>(TestServices.appUrl + "/public-feed/api/v1/ads") {
+                header("Authorization", "Bearer ${expiredToken}")
+            }
         }.also { assertEquals(401, it.status.value) }
     }
 
     @Test
-    fun testFeedWithApiToken() {
-        val tokenValue = obtainApiTokenValue()
-
+    fun testNoApiToken() {
         runBlocking {
-            httpClient.get<HttpResponse>(TestServices.appUrl + "/public-feed/api/v1/ads") {
-                header("Authorization", "Bearer ${tokenValue}")
-            }
-        }.also { assertTrue(it.status.isSuccess())}
-
+            httpClient.get<HttpResponse>(ApiTest.appUrl + "/public-feed/api/v1/ads")
+        }.also { assertEquals(401, it.status.value) }
     }
 
     @Test
     fun testFeedNoAccessWithBadToken() {
         val badTokenValue = obtainApiTokenValue().replace("A", "B")
-
         runBlocking {
-            httpClient.get<HttpResponse>(TestServices.appUrl + "/public-feed/api/v1/ads") {
+            httpClient.get<HttpResponse>(ApiTest.appUrl + "/public-feed/api/v1/ads") {
                 header("Authorization", "Bearer ${badTokenValue}")
             }
-        }.also { assertEquals(401, it.status.value)}
+        }.also { assertEquals(401, it.status.value) }
     }
 
-    private fun obtainApiTokenValue(): String {
-        val response = runBlocking<HttpResponse> {
-            httpClient.submitForm(TestServices.appUrl + "/public-feed/internal/newApiToken",
-                    Parameters.build { append("subject", "test@test") })
-        }
-        return runBlocking { response.readText(Charsets.UTF_8) }.let { text ->
-            text.lines().first { line -> line.startsWith("Authorization:") }.removePrefix("Authorization: Bearer ")
-        }
+    private fun obtainApiTokenValue(subject: String = "test@test", expires: String? = null): String = runBlocking {
+        httpClient.submitForm<HttpResponse>(ApiTest.appUrl + "/public-feed/internal/newApiToken",
+                Parameters.build {
+                    append("subject", subject)
+                    expires?.also { append("expires", it) }
+                })
+                .readText(Charsets.UTF_8).let { text ->
+                    text.lines().first { line -> line.startsWith("Authorization:") }
+                            .removePrefix("Authorization: Bearer ")
+                }
     }
+
 
 }

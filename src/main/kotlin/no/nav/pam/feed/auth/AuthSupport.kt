@@ -15,7 +15,17 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.post
 import mu.KotlinLogging
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.time.format.DateTimeParseException
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoField
+import java.time.temporal.TemporalAccessor
+import java.time.format.DateTimeFormatterBuilder
+
+
 
 private val log = KotlinLogging.logger { }
 
@@ -30,14 +40,32 @@ class JwtTokenFactory(issuer: String, audience: String, secret: String) {
                     .withAudience(audience)
                     .build()
 
-    fun newTokenFor(subject: String): String =
+    fun newTokenFor(subject: String, expires: Date? = null): String =
             JWT.create()
                     .withSubject(subject)
                     .withIssuer(issuer)
                     .withAudience(audience)
                     .withIssuedAt(Date())
+                    .withExpiresAt(expires)
                     .sign(algorithm)
 
+}
+
+private fun parseDateOptionallyTime(d: String): LocalDateTime? {
+    val dateTimeFormatter = DateTimeFormatterBuilder()
+            .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
+            .toFormatter()
+    try {
+        val temporal = dateTimeFormatter.parse(d)
+        return if (temporal.isSupported(ChronoField.HOUR_OF_DAY)) {
+            LocalDateTime.from(temporal)
+        } else {
+            LocalDate.from(temporal).atStartOfDay()
+        }
+    } catch (e: Exception) {
+        return null
+    }
 }
 
 fun Route.tokenManagementApi (tokenFactory: JwtTokenFactory) {
@@ -69,13 +97,18 @@ fun Route.tokenManagementApi (tokenFactory: JwtTokenFactory) {
     post("newApiToken") {
         try {
             val params = call.receiveParameters()
-            val subject = params.get("subject")
+            val subject = params["subject"]
             if (subject == null) {
                 call.respond(HttpStatusCode.BadRequest, "Missing required form parameter 'subject'\n")
                 return@post
             }
+            val expires = params["expires"]?.let {
+                parseDateOptionallyTime(it)
+            }?.let {
+                Date.from(it.atZone(ZoneId.systemDefault()).toInstant())
+            }
 
-            val newToken = tokenFactory.newTokenFor(subject)
+            val newToken = tokenFactory.newTokenFor(subject, expires)
             log.info("New token created for subject '$subject': $newToken")
             call.respondText("For subject: ${subject}\nAuthorization: Bearer ${newToken}\n")
         } catch (e: Exception) {
