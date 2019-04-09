@@ -55,6 +55,7 @@ fun webApplication(
     if (environment.auth.optional) {
         log.warn("API authentication requirement disabled")
     }
+    log.info("Token secret key has ${environment.auth.secret.length} characters")
 
     return embeddedServer(Netty, port) {
         install(ContentNegotiation) {
