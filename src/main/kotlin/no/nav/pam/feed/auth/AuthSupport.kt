@@ -15,16 +15,13 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.post
 import mu.KotlinLogging
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import java.time.format.DateTimeParseException
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.temporal.ChronoField
-import java.time.temporal.TemporalAccessor
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
-
+import java.time.temporal.ChronoField
+import java.util.*
 
 
 private val log = KotlinLogging.logger { }
@@ -83,6 +80,7 @@ fun Route.tokenManagementApi (tokenFactory: JwtTokenFactory) {
                     Subject:      ${decoded.subject}
                     Issuer:       ${decoded.issuer}
                     Issued at:    ${decoded.issuedAt}
+                    Expires:      ${decoded.expiresAt ?: "not set"}
                     Verification: ${valid}
 
                 """.trimIndent())
