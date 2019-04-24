@@ -30,7 +30,7 @@ fun Route.feed(
     get("/api/v1/ads") {
         clientFactory().use { client ->
             try {
-                val size = (call.parameters["size"]?.toInt() ?: 50).let { Math.min(Math.max(it, 1), 100) }
+                val size = (call.parameters["size"]?.toInt() ?: 20).let { Math.min(Math.max(it, 1), 100) }
                 val page = (call.parameters["page"]?.toInt() ?: 0).let { Math.min(Math.max(it, 0), MAX_TOTAL_HITS / size) }
 
                 val from = page * size
