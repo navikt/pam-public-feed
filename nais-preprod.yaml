@@ -26,3 +26,5 @@ spec:
     enabled: true
   ingresses:
     - https://pam-public-feed.nais.oera-q.local
+    - https://arbeidsplassen-q.nav.no/public-feed
+
