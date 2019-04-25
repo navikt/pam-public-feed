@@ -82,7 +82,7 @@ class ApiTest {
     @Test
     fun testNewApiToken() {
         runBlocking {
-            httpClient.submitForm<HttpResponse>(TestServices.appUrl + "/public-feed/internal/newApiToken",
+            httpClient.submitForm<HttpResponse>(appUrl + "/public-feed/internal/newApiToken",
                     Parameters.build { append("subject", "test@test") })
         }.also { assertTrue(it.status.isSuccess()) }
     }
@@ -92,7 +92,7 @@ class ApiTest {
         val tokenValue = obtainApiTokenValue()
 
         runBlocking {
-            httpClient.get<HttpResponse>(ApiTest.appUrl + "/public-feed/api/v1/ads") {
+            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
                 header("Authorization", "Bearer ${tokenValue}")
             }
         }.also { assertTrue(it.status.isSuccess())}
@@ -103,7 +103,7 @@ class ApiTest {
         val futureExpiryToken = obtainApiTokenValue(expires = LocalDateTime.now().plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
 
         runBlocking {
-            httpClient.get<HttpResponse>(TestServices.appUrl + "/public-feed/api/v1/ads") {
+            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
                 header("Authorization", "Bearer ${futureExpiryToken}")
             }
         }.also { assertTrue(it.status.isSuccess()) }
@@ -114,7 +114,7 @@ class ApiTest {
         val expiredToken = obtainApiTokenValue(expires = "2018-01-01")
 
         runBlocking {
-            httpClient.get<HttpResponse>(TestServices.appUrl + "/public-feed/api/v1/ads") {
+            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
                 header("Authorization", "Bearer ${expiredToken}")
             }
         }.also { assertEquals(401, it.status.value) }
@@ -123,7 +123,7 @@ class ApiTest {
     @Test
     fun testNoApiToken() {
         runBlocking {
-            httpClient.get<HttpResponse>(ApiTest.appUrl + "/public-feed/api/v1/ads")
+            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads")
         }.also { assertEquals(401, it.status.value) }
     }
 
@@ -131,14 +131,14 @@ class ApiTest {
     fun testFeedNoAccessWithBadToken() {
         val badTokenValue = obtainApiTokenValue().replace("A", "B")
         runBlocking {
-            httpClient.get<HttpResponse>(ApiTest.appUrl + "/public-feed/api/v1/ads") {
+            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
                 header("Authorization", "Bearer ${badTokenValue}")
             }
         }.also { assertEquals(401, it.status.value) }
     }
 
     private fun obtainApiTokenValue(subject: String = "test@test", expires: String? = null): String = runBlocking {
-        httpClient.submitForm<HttpResponse>(ApiTest.appUrl + "/public-feed/internal/newApiToken",
+        httpClient.submitForm<HttpResponse>(appUrl + "/public-feed/internal/newApiToken",
                 Parameters.build {
                     append("subject", subject)
                     expires?.also { append("expires", it) }
