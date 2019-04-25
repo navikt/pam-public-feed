@@ -74,7 +74,7 @@ fun webApplication(
             }
         }
         install(DefaultHeaders) {
-            header(HttpHeaders.CacheControl, "public, max-age=600")
+            header(HttpHeaders.CacheControl, "public, max-age=300")
         }
         install(Authentication) {
             jwt {
@@ -96,7 +96,7 @@ fun webApplication(
                 }
 
                 authenticate(optional = environment.auth.optional) {
-                    feed(clientFactory = clientFactory, searchApiHost = environment.searchApiHost)
+                    feed(httpClient = clientFactory(), searchApiHost = environment.searchApiHost)
                 }
             }
         }
