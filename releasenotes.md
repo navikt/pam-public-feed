@@ -1,3 +1,6 @@
+## RELEASE - 0.9.68-7d4bbdd
+#### New in this release: 
++ 2019-04-25 [PAM-3152] Add ingress https://arbeidsplassen.nav.no/public-feed
 ## RELEASE - 0.8.64-9ad34fa
 #### New in this release: 
 + 2019-04-09 [PAM-2942] Allow to optionally set an expiry date for new tokens
