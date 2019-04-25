@@ -7,9 +7,9 @@ data class FeedRoot(val content: List<FeedAd>,
                     val totalElements: Int,
                     val pageNumber: Int,
                     val pageSize: Int) {
-    val totalPages: Int = totalElements / pageSize
+    val totalPages: Int = totalElements / pageSize + if (totalElements % pageSize > 0) 1 else 0
     val first: Boolean = pageNumber == 0
-    val last: Boolean = pageNumber >= totalPages
+    val last: Boolean = pageNumber >= totalPages - 1
     val sort: String = "published:desc"
 }
 
