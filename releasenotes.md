@@ -1,3 +1,9 @@
+## RELEASE - 0.10.70-416dd06
+#### New in this release: 
++ 2019-04-25 [FIX] Respond with 502 bad gateway if we cannot talk to backend
++ 2019-04-25 [PAM-3196] Dont close httpclient after every request to pam-search-api
++ 2019-04-25 [Fix] totalPages should not be zero based
++ 2019-04-25 [PAM-3196] Upgrade ktor & friends
 ## RELEASE - 0.9.68-7d4bbdd
 #### New in this release: 
 + 2019-04-25 [PAM-3152] Add ingress https://arbeidsplassen.nav.no/public-feed
