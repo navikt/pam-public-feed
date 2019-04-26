@@ -14,6 +14,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.features.CORS
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.HttpHeaders
@@ -31,26 +32,29 @@ import no.nav.pam.feed.auth.tokenManagementApi
 import no.nav.pam.feed.platform.naisApi
 
 private val log = KotlinLogging.logger { }
+private val defaultClientFactory :  () -> HttpClient = {
+    HttpClient(Apache) {
+        install(JsonFeature) {
+            serializer = JacksonSerializer {
+                registerModule(JavaTimeModule())
+                registerModule(KotlinModule())
+            }
+        }
+    }
+}
 
 fun main(args: Array<String>) {
 
     start(webApplication())
 }
 
+
 fun webApplication(
         port: Int = 9021,
-        clientFactory: () -> HttpClient = {
-            HttpClient(Apache) {
-                install(JsonFeature) {
-                    serializer = JacksonSerializer {
-                        registerModule(JavaTimeModule())
-                        registerModule(KotlinModule())
-                    }
-                }
-            }
-        },
+        clientFactory: () -> HttpClient = defaultClientFactory,
         environment: Environment = Environment()
 ): ApplicationEngine {
+
     val tokenFactory = JwtTokenFactory(environment.auth.issuer, environment.auth.audience, environment.auth.secret)
     if (environment.auth.optional) {
         log.warn("API authentication requirement disabled")
@@ -87,6 +91,10 @@ fun webApplication(
                         null
                 }
             }
+        }
+        install(CORS) {
+            allowCredentials = true
+            anyHost()
         }
         routing {
             route (environment.contextPath) {
