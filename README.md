@@ -32,7 +32,7 @@ Call:
 
     curl https://pam-public-feed.nais.oera.no/public-feed/internal/newApiToken -d subject=EMAIL -d expires=2020-01-01
 
-## Get informaation about an existing token
+## Get information about an existing token
 
 Call:
 
