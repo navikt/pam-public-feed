@@ -14,12 +14,12 @@ import io.ktor.client.request.header
 import io.ktor.client.response.HttpResponse
 import io.ktor.client.response.readText
 import io.ktor.http.*
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.io.jvm.javaio.toByteReadChannel
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
+import no.nav.pam.feed.ad.FeedRoot
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.net.ServerSocket
@@ -31,7 +31,14 @@ private val log = KotlinLogging.logger {}
 
 class ApiTest {
 
-    private val httpClient = HttpClient(Apache)
+    private val httpClient = HttpClient(Apache) {
+        install(JsonFeature) {
+            serializer = JacksonSerializer {
+                registerModule(JavaTimeModule())
+                registerModule(KotlinModule())
+            }
+        }
+    }
 
     companion object TestServices {
 
@@ -135,6 +142,140 @@ class ApiTest {
                 header("Authorization", "Bearer ${badTokenValue}")
             }
         }.also { assertEquals(401, it.status.value) }
+    }
+
+    @Test
+    fun paging_Size10Page0() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=10&page=0") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(10, feed.pageSize)
+        assertEquals(0, feed.pageNumber)
+        assertEquals(34, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertTrue(feed.first)
+        assertFalse(feed.last)
+    }
+
+    @Test
+    fun paging_Size10Page1() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=10&page=1") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(10, feed.pageSize)
+        assertEquals(1, feed.pageNumber)
+        assertEquals(34, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertFalse(feed.first)
+        assertFalse(feed.last)
+    }
+
+    @Test
+    fun paging_Size10Page32() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=10&page=32") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(10, feed.pageSize)
+        assertEquals(32, feed.pageNumber)
+        assertEquals(34, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertFalse(feed.first)
+        assertFalse(feed.last)
+    }
+
+    @Test
+    fun paging_Size10Page33() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=10&page=33") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(10, feed.pageSize)
+        assertEquals(33, feed.pageNumber)
+        assertEquals(34, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertFalse(feed.first)
+        assertTrue(feed.last)
+    }
+
+    @Test
+    fun paging_SizeNegativePage0() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=-10&page=0") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(1, feed.pageSize)
+    }
+
+    @Test
+    fun paging_PageNegative() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?page=-10") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(0, feed.pageNumber)
+    }
+
+    @Test
+    fun paging_Size1() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=1") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(1, feed.pageSize)
+        assertEquals(0, feed.pageNumber)
+        assertEquals(332, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertTrue(feed.first)
+        assertFalse(feed.last)
+    }
+
+    @Test
+    fun paging_Size1Page331() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=1&page=331") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(1, feed.pageSize)
+        assertEquals(331, feed.pageNumber)
+        assertEquals(332, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertFalse(feed.first)
+        assertTrue(feed.last)
+    }
+
+    @Test
+    fun paging_Size100Page100() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=100&page=100") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(100, feed.pageSize)
+        assertEquals(50, feed.pageNumber)
+        assertEquals(4, feed.totalPages)
+        assertEquals(332, feed.totalElements)
+        assertFalse(feed.first)
+        assertTrue(feed.last)
     }
 
     private fun obtainApiTokenValue(subject: String = "test@test", expires: String? = null): String = runBlocking {
