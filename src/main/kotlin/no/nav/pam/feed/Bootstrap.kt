@@ -75,6 +75,7 @@ fun webApplication(
         }
         install(DefaultHeaders) {
             header(HttpHeaders.CacheControl, "public, max-age=300")
+            header(HttpHeaders.Server, "ktor")
         }
         install(Authentication) {
             jwt {
