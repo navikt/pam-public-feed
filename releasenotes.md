@@ -1,3 +1,6 @@
+## RELEASE - 0.11.72-e14d56c
+#### New in this release: 
++ 2019-04-26 [Lagt på CORS-støtte]
 ## RELEASE - 0.10.70-416dd06
 #### New in this release: 
 + 2019-04-25 [FIX] Respond with 502 bad gateway if we cannot talk to backend
