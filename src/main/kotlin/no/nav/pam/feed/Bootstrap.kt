@@ -15,9 +15,12 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.features.CORS
+import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.content.*
 import io.ktor.jackson.jackson
 import io.ktor.routing.route
 import io.ktor.routing.routing
@@ -30,6 +33,8 @@ import no.nav.pam.feed.ad.feed
 import no.nav.pam.feed.auth.JwtTokenFactory
 import no.nav.pam.feed.auth.tokenManagementApi
 import no.nav.pam.feed.platform.naisApi
+import org.slf4j.event.Level
+import java.io.File
 
 private val log = KotlinLogging.logger { }
 private val defaultClientFactory :  () -> HttpClient = {
@@ -95,10 +100,22 @@ fun webApplication(
         }
         install(CORS) {
             allowCredentials = true
+            header("Authorization")
             anyHost()
         }
+        install(CallLogging) {
+            level = Level.DEBUG
+        }
         routing {
+
             route (environment.contextPath) {
+
+                static("swagger") {
+                    resources("swagger")
+                    staticBasePackage = "swagger"
+                    defaultResource("index.html")
+                }
+
                 route("/internal") {
                     naisApi()
                     tokenManagementApi(tokenFactory)
