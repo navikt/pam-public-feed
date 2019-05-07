@@ -1,50 +1,38 @@
-# pam-public-feed
+# NAV job ads public API
 
-Job ads JSON feed
+## Background
+As a public agency responsible for getting people into work, NAV keeps a job ads 
+database of open positions in Norway. As a public actor, NAV is also required to
+publish available data to other actors.
+
+Publishing data about available jobs for the Norwegian population and employers 
+is found in this API 
+
 
 ## Authentication
 
 The feed API requires authentication using the `Authorization` header, type
 `Bearer` and a signed JWT token.
 
-## Create new API token
+There are two types of tokens, public and private. The public token may be revoked
+at any time and replaced by another one. If the consumer needs a more stable token
+one can be ordered by mailing a request for a token to 
+plattform.for.arbeidsmarkedet@nav.no. Please include your name or the companies name
+in the request.
 
-1. Create the token:
+The current public token is
+```
+token... 
+```
 
-        curl https://pam-public-feed.nais.oera.no/public-feed/internal/newApiToken -d subject=EMAIL
-    
-    where `EMAIL` is the email address provided as customer contact information.
-    
-    This token will never expire and is valid for as long as secret key is kept
-    unchanged.
-    
-2. Log/register the customer email (TODO link to some Confluence page).
+## Request and responses
+Requests and responses are documented with 
+[swagger](https://arbeidsplassen.nav.no/public-feed/swagger/). When testing with
+swagger feel free to use the token above
 
-3. Supply customer with information about the `Authorization` header value from
-   output in step 1.
-   
-## Create token with expiry
 
-If desireable, an expiry date can be set on generated tokens. Such tokens will
-stop working after the expiry date.
+-------------------
+[Developers documentation](Devdoc.md)
 
-Call:
 
-    curl https://pam-public-feed.nais.oera.no/public-feed/internal/newApiToken -d subject=EMAIL -d expires=2020-01-01
 
-## Get information about an existing token
-
-Call:
-
-    curl -H 'Authorization: Bearer TOKEN' https://pam-public-feed.nais.oera.no/public-feed/internal/apiTokenInfo
-
-where `TOKEN` is the encoded token value. The endpoint decodes and verifies the
-token, then responds:
-
-    Token information:
-    Algorithm:    HS256
-    Subject:      contact@some-customer.com
-    Issuer:       nav.no
-    Issued at:    Sun Apr 07 20:28:18 CEST 2019
-    Expires:      not set
-    Verification: OK

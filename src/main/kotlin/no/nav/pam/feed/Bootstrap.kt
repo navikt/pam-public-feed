@@ -111,6 +111,10 @@ fun webApplication(
             route (environment.contextPath) {
 
                 static("swagger") {
+                    static("api") {
+                        resources("swagger/api")
+                        staticBasePackage = "swagger.api"
+                    }
                     resources("swagger")
                     staticBasePackage = "swagger"
                     defaultResource("index.html")

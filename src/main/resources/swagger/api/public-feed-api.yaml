@@ -1,0 +1,202 @@
+openapi: 3.0.1
+info:
+  title: "NAV ads public API"
+  description: "Published data about available jobs for the Norwegian population and employers ares found in this API."
+  termsOfService: "https://datanorge.no"
+  contact:
+    email: "plattform.for.arbeidsmarkedet@nav.no"
+  version: '1'
+  license:
+    name: "MIT"
+servers:
+  - url: 'https://arbeidsplassen.nav.no'
+paths:
+  /public-feed/api/v1/ads:
+    get:
+      summary: "Fetches job ads"
+      description: "Fetches a paged list of job ads parameters"
+      parameters:
+        - name: "page"
+          in: "query"
+          description: "Page number"
+          required: false
+          schema:
+            type: "integer"
+        - name: "size"
+          in: "query"
+          description: "Page size"
+          required: false
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: Found ads
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ads"
+              example:
+                content:
+                  - uuid: "2f5db4cc-c9d4-43c1-aa55-57e295194099"
+                    published: "2019-05-06T12:27:12.29+02:00"
+                    expires: "2019-05-20T00:00:00+02:00"
+                    workLocations:
+                      - country: "NORGE"
+                        address: "GATEADRESSE 1"
+                        city: "OSLO"
+                        postalCode: "0250"
+                        county: "OSLO"
+                        municipal: "OSLO"
+                    title: "Stillingstittel"
+                    description: |
+                      <h1>Overskrift-eksempel</h1>
+                      <p>Stillingstekst</p>
+                    source: "https://www.sourcelink.no/id"
+                    applicationDue: "20.05.2019"
+                    occupations:
+                      - "Salg"
+                    link: "https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099"
+                    employer:
+                      name: Arbeidsgiver
+                      orgnr: '123456789'
+                totalElements: 5000
+                pageNumber: 0
+                pageSize: 1
+                totalPages: 5000
+                first: true
+                last: false
+                sort: "published:desc"
+      servers:
+        - url: 'https://arbeidsplassen.nav.no'
+    servers:
+      - url: 'https://arbeidsplassen.nav.no'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"
+  schemas:
+    Ads:
+      type: object
+      properties:
+        content:
+          type: array
+          title: List of ads found
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+                title: NAVs id
+                examples:
+                  - 2f5db4cc-c9d4-43c1-aa55-57e295194099
+              published:
+                type: string
+                title: Date published by NAV
+                examples:
+                  - '2019-05-06T12:27:12.29+02:00'
+              expires:
+                type: string
+                title: Date the ad should be removed
+                examples:
+                  - '2019-05-20T00:00:00+02:00'
+              workLocations:
+                type: array
+                title: List of work locations
+                items:
+                  type: object
+                  properties:
+                    country:
+                      type: string
+                      examples:
+                        - NORGE
+                    address:
+                      type: string
+                      examples:
+                        - GATEADRESSE 1
+                    city:
+                      type: string
+                      examples:
+                        - OSLO
+                    postalCode:
+                      type: string
+                      examples:
+                        - '0250'
+                    county:
+                      type: string
+                      examples:
+                        - OSLO
+                    municipal:
+                      type: string
+                      examples:
+                        - OSLO
+              title:
+                type: string
+                title: Ad heading
+                examples:
+                  - Stillingstittel
+              description:
+                type: string
+                title: Ad content. HTML formatted
+                examples:
+                  - |
+                    <h1>Overskrift-eksempel</h1>
+                    <p>Stillingstekst</p>
+              source:
+                type: string
+                title: Link to the source from which NAV got the ad
+                examples:
+                  - https://www.sourcelink.no/id
+              applicationDue:
+                type: string
+                examples:
+                  - 20.05.2019
+              occupations:
+                type: array
+                items:
+                  type: string
+                  examples:
+                    - Salg
+              link:
+                type: string
+                title: Link to a human readable version of the ad at NAVs pages
+                examples:
+                  - https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099
+              employer:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    examples:
+                      NAV
+                  orgnr:
+                    type: string
+                    examples:
+                      '123456789'
+        totalElements:
+          type: integer
+          title: Total count of ads found. Max 5000
+        pageNumber:
+          type: integer
+          title: Page number. Starting with 0
+        pageSize:
+          type: integer
+          title: Page size. Min 1, max 50
+        totalPages:
+          type: integer
+        first:
+          type: boolean
+          title: Whether this is the first page
+        last:
+          type: boolean
+          title: Whether this is the last page
+        sort:
+          type: string
+          examples:
+            - published:desc
+security:
+  - bearerAuth: []
+externalDocs:
+  description: github
+  url: "https://github.com/navikt/pam-public-feed"

@@ -13,6 +13,7 @@
     <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
 
     <logger name="no.nav" level="DEBUG"/>
+    <logger name="ktor" level="DEBUG"/>
 
     <root level="debug">
         <appender-ref ref="CONSOLE"/>
