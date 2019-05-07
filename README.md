@@ -28,7 +28,7 @@ token...
 ## Request and responses
 Requests and responses are documented with 
 [swagger](https://arbeidsplassen.nav.no/public-feed/swagger/). When testing with
-swagger feel free to use the token above
+swagger feel free to use the token above.
 
 
 -------------------
