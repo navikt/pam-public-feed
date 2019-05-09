@@ -1,5 +1,6 @@
 package no.nav.pam.feed
 
+import apiDoc
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -103,22 +104,11 @@ fun webApplication(
             header("Authorization")
             anyHost()
         }
-        install(CallLogging) {
-            level = Level.DEBUG
-        }
         routing {
 
             route (environment.contextPath) {
 
-                static("swagger") {
-                    static("api") {
-                        resources("swagger/api")
-                        staticBasePackage = "swagger.api"
-                    }
-                    resources("swagger")
-                    staticBasePackage = "swagger"
-                    defaultResource("index.html")
-                }
+                apiDoc()
 
                 route("/internal") {
                     naisApi()
