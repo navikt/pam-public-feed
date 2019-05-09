@@ -1,3 +1,6 @@
+## RELEASE - 0.14.76-f749fed
+#### New in this release: 
++ 2019-05-07 [Document usage in README and API in swagger]
 ## RELEASE - 0.11.72-e14d56c
 #### New in this release: 
 + 2019-04-26 [Lagt på CORS-støtte]
