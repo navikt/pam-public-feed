@@ -14,7 +14,7 @@ fun Route.apiDoc() {
 
         intercept(ApplicationCallPipeline.Call) {
             call.request.path().takeUnless { it.endsWith("/") }?.also {
-                call.respondRedirect("$it/")
+                call.respondRedirect("$it/", true)
                 finish()
             }
         }
