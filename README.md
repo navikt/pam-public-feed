@@ -17,7 +17,7 @@ The feed API requires authentication using the `Authorization` header, type
 There are two types of tokens, public and private. The public token may be revoked
 at any time and replaced by another one. If the consumer needs a more stable token
 one can be ordered by mailing a request for a token to 
-plattform.for.arbeidsmarkedet@nav.no. Please include your name or the companies name
+plattform.for.arbeidsmarkedet@nav.no. Please include your name or the company name
 in the request.
 
 The current public token is
