@@ -3,6 +3,7 @@ package no.nav.pam.feed
 import apiDoc
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -16,12 +17,9 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.features.CORS
-import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.content.*
 import io.ktor.jackson.jackson
 import io.ktor.routing.route
 import io.ktor.routing.routing
@@ -34,28 +32,23 @@ import no.nav.pam.feed.ad.feed
 import no.nav.pam.feed.auth.JwtTokenFactory
 import no.nav.pam.feed.auth.tokenManagementApi
 import no.nav.pam.feed.platform.naisApi
-import org.slf4j.event.Level
-import java.io.File
 
 private val log = KotlinLogging.logger { }
 private val defaultClientFactory :  () -> HttpClient = {
     HttpClient(Apache) {
         install(JsonFeature) {
-            serializer = JacksonSerializer {
-                registerModule(JavaTimeModule())
-                registerModule(KotlinModule())
-            }
+            serializer = jacksonSerializer
         }
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
 
-    start(webApplication())
+    start(searchApi())
 }
 
 
-fun webApplication(
+fun searchApi(
         port: Int = 9021,
         clientFactory: () -> HttpClient = defaultClientFactory,
         environment: Environment = Environment()
@@ -78,8 +71,7 @@ fun webApplication(
                     })
                 }
 
-                registerModule(JavaTimeModule())
-                registerModule(KotlinModule())
+                registerModules(JavaTimeModule(), KotlinModule())
                 configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             }
         }
@@ -130,5 +122,12 @@ object Bootstrap {
         log.debug("Starting web application")
         webApplication.start(wait = true)
     }
+
+}
+
+internal val jacksonSerializer = JacksonSerializer {
+    registerModule(JavaTimeModule())
+    registerModule(KotlinModule())
+    disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 
 }

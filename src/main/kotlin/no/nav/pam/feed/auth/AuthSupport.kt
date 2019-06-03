@@ -26,10 +26,9 @@ import java.util.*
 
 private val log = KotlinLogging.logger { }
 
-class JwtTokenFactory(issuer: String, audience: String, secret: String) {
-    val issuer = issuer
-    val audience = audience
-    val algorithm = Algorithm.HMAC256(secret)
+class JwtTokenFactory(private val issuer: String, private val audience: String, secret: String) {
+
+    private val algorithm = Algorithm.HMAC256(secret)
 
     fun newHmacJwtVerifier(): JWTVerifier =
             JWT.require(algorithm) // signature

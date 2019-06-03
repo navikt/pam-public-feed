@@ -1,12 +1,8 @@
 package no.nav.pam.feed
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
-import mu.KotlinLogging
 import org.apache.http.conn.ssl.NoopHostnameVerifier
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy
 import org.apache.http.ssl.SSLContextBuilder
@@ -21,23 +17,20 @@ val acceptInsecureSslClientFactory: () -> HttpClient = {
 
         }
         install(JsonFeature) {
-            serializer = JacksonSerializer {
-                registerModule(JavaTimeModule())
-                registerModule(KotlinModule())
-            }
+            serializer = jacksonSerializer
         }
     }
 }
 
 val localTestEnvironment: Environment = Environment(
-        searchApiHost =  getEnvVar("SEARCH_API_HOST", "https://pam-search-api.nais.oera-q.local"),
+        searchApiHost =  getEnvVar("SEARCH_API_HOST", "https://arbeidsplassen-q.nav.no/stillinger/api/search"),
         indentJson = true,
         auth = AuthConfig(optional = true, secret = getEnvVar("AUTH_SECRET", "dev-key"))
 )
 
-fun main(args: Array<String>) {
+fun main() {
 
-    Bootstrap.start(webApplication(
+    Bootstrap.start(searchApi(
             clientFactory = acceptInsecureSslClientFactory,
             environment = localTestEnvironment))
 

@@ -47,6 +47,7 @@ fun mapLocation(sourceLocation: Location): FeedLocation {
 }
 
 fun populateOccupations(source: Source): List<String> {
+    source.source.map { it.toUpperCase() }
     val occupations = arrayListOf<String>()
 
     if (source.source.toUpperCase() == "DIR") {

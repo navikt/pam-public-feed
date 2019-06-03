@@ -16,7 +16,7 @@ import io.ktor.routing.get
 import mu.KotlinLogging
 import java.io.IOException
 
-const internal val MAX_TOTAL_HITS = 5000
+internal const val MAX_TOTAL_HITS = 5000
 
 private val log = KotlinLogging.logger { }
 
@@ -77,8 +77,10 @@ fun Route.feed(
 
             call.respond(mapResult(searchRequest, page, size, call.request.host()))
         } catch (e: NumberFormatException) {
+            log.error { "Bad numeric parameter value: ${e.message}" }
             call.respond(HttpStatusCode.BadRequest, "Bad numeric parameter value: ${e.message}")
         } catch (io: IOException) {
+            log.error(io) { "Failed to communicate with backend" }
             call.respond(HttpStatusCode.BadGateway, "Failed to communicate with backend")
         }
 
