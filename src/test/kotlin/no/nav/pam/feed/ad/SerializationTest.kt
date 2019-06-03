@@ -1,5 +1,6 @@
 package no.nav.pam.feed.ad
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -18,6 +19,7 @@ class SerializationTest {
     fun init() {
         objectMapper.registerModule(JavaTimeModule())
         objectMapper.registerModule(KotlinModule())
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 
     @Test

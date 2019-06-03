@@ -1,12 +1,9 @@
 package no.nav.pam.feed
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpResponse
-import io.ktor.client.features.json.JacksonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
@@ -33,10 +30,7 @@ class ApiTest {
 
     private val httpClient = HttpClient(Apache) {
         install(JsonFeature) {
-            serializer = JacksonSerializer {
-                registerModule(JavaTimeModule())
-                registerModule(KotlinModule())
-            }
+            serializer = jacksonSerializer
         }
     }
 
@@ -59,15 +53,12 @@ class ApiTest {
         }
         private val mockSearchApiClient = HttpClient(mockSearchApi) {
             install(JsonFeature) {
-                serializer = JacksonSerializer {
-                    registerModule(JavaTimeModule())
-                    registerModule(KotlinModule())
-                }
+                serializer = jacksonSerializer
             }
         }
 
         val randomPort = ServerSocket(0).use { it.localPort }
-        val webapp = webApplication(randomPort, { mockSearchApiClient },
+        val webapp = searchApi(randomPort, { mockSearchApiClient },
                 Environment(searchApiHost = "http://mocked-service", auth = AuthConfig(secret = "test-secret")))
         val appUrl = "http://localhost:${randomPort}"
 
