@@ -63,14 +63,6 @@ fun searchApi(
     return embeddedServer(Netty, port) {
         install(ContentNegotiation) {
             jackson {
-                if (environment.indentJson) {
-                    configure(SerializationFeature.INDENT_OUTPUT, true)
-                    setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
-                        indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
-                        indentObjectsWith(DefaultIndenter("  ", "\n"))
-                    })
-                }
-
                 registerModules(JavaTimeModule(), KotlinModule())
                 configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             }
