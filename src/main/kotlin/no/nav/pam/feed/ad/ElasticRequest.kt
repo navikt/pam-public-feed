@@ -4,11 +4,11 @@ import mu.KotlinLogging
 
 internal class ElasticRequest(pageSize: Int, currentPage: Int, vararg filters: Filter) {
 
-    private val filters = MutableList(1) { Filter("status", "ACTIVE") }
+    private val filters = MutableList(1) { Filter("status", "ACTIVE") } + filters
 
     private val size = pageSize
     private val from = currentPage * pageSize
-    private val terms get() = filters.map { it.asTerm() }.joinToString(",")
+    private val terms get() = filters.map { it.asTerm() }.joinToString(",\n")
 
     internal val body get() =
         """{
