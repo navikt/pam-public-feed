@@ -1,6 +1,5 @@
 package no.nav.pam.feed.ad
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.ZonedDateTime
 
 data class FeedRoot(
@@ -14,7 +13,6 @@ data class FeedRoot(
     val sort: String = "published:desc"
 }
 
-//@JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedAd(
         val uuid: String,
         val published: ZonedDateTime,
@@ -26,9 +24,14 @@ data class FeedAd(
         val applicationDue: String?,
         val occupations: List<String>,
         val link: String,
-        val employer: FeedEmployer)
+        val employer: FeedEmployer,
+        val engagementtype: String?,
+        val extent: String?,
+        val starttime: String?,
+        val positioncount: String?,
+        val employerhomepage: String?,
+        val sector: String?)
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedLocation(
         val country: String,
         val address: String?,
@@ -37,7 +40,6 @@ data class FeedLocation(
         val county: String?,
         val municipal: String?)
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class FeedEmployer(
         val name: String,
         val orgnr: String?,
