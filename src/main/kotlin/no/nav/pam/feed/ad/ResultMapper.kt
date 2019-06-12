@@ -13,17 +13,23 @@ fun mapAd(source: Source, host: String?): FeedAd {
     val link = "https://$host/stillinger/stilling/${source.uuid}"
 
     return FeedAd(
-            source.uuid,
-            source.published,
-            source.expires,
-            locations,
-            source.title,
-            source.properties["adtext"],
-            source.properties["sourceurl"],
-            source.properties["applicationdue"],
-            populateOccupations(source),
-            link,
-            mapEmployer(source)
+            uuid = source.uuid,
+            published = source.published,
+            expires = source.expires,
+            workLocations = locations,
+            title = source.title,
+            description = source.properties["adtext"],
+            source = source.properties["sourceurl"],
+            applicationDue = source.properties["applicationdue"],
+            occupations = populateOccupations(source),
+            link = link,
+            employer = mapEmployer(source),
+            engagementtype = source.properties["engagementtype"],
+            extent = source.properties["extent"],
+            starttime = source.properties["starttime"],
+            positioncount = source.properties["positioncount"],
+            employerhomepage = source.properties["employerhomepage"],
+            sector = source.properties["sector"]
     )
 }
 
