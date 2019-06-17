@@ -77,11 +77,11 @@ fun ValueParam.asTerm() = if (!isNegated) """{ "term": {"${name}":"${value()}"} 
 fun ValueParam.asNegatedTerm() = if(isNegated) """{ "term": {"${name}":"${value()}"} }""" else ""
 
 fun DateParam.asTerm(): String {
-    val startOperator = if(startInclusive()) "gte" else "gt"
-    val endOperator = if(endInclusive()) "lte" else "lt"
+    val startOperator = if(startInclusive) "gte" else "gt"
+    val endOperator = if(endInclusive) "lte" else "lt"
     return """{
         |"range":
-          |{"${name()}": {
+          |{"${name}": {
             |"${startOperator}" : "${start(Converter.ToString)}",
             |"${endOperator}" : "${end(Converter.ToString)}"
             |}
