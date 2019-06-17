@@ -5,7 +5,6 @@ import io.ktor.auth.jwt.JWTPrincipal
 import io.ktor.auth.principal
 import io.ktor.client.HttpClient
 import io.ktor.client.request.post
-import io.ktor.client.request.url
 import io.ktor.content.TextContent
 import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
@@ -25,21 +24,16 @@ internal const val MAX_TOTAL_HITS = 5000
 private val log = KotlinLogging.logger { }
 
 fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
+    val url = "$searchApiHost/public-feed/ad/_search"
     log.info("Using search API host: ${searchApiHost}")
 
     get("/api/v1/ads") {
 
-        val req = ElasticRequest(call.parameters.size, call.parameters.page, *call.parameters.filters())
-
-        val response = httpClient.post<SearchResponseRoot> {
-            url("$searchApiHost/public-feed/ad/_search")
-            body = TextContent(text = req.body, contentType = ContentType.Application.Json)
-        }
-
         log.debug { "Auth subject: ${call.principal<JWTPrincipal>()?.payload?.subject}" }
 
-        call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
+        val response = httpClient.post<SearchResponseRoot>(url) { body = call.parameters.toElasticRequest().json() }
 
+        call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
     }
 
 }
@@ -56,10 +50,19 @@ fun StatusPages.Configuration.feed() {
     }
 }
 
+private fun ElasticRequest.json() = TextContent(this.body, ContentType.Application.Json)
+
+private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(), this.rangeFilters())
+
 private val Parameters.size get() = (this["size"]?.toInt() ?: 20).coerceIn(1 .. 100 )
 private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.size)
-private val validFilters = listOf("uuid", "source", "updated")
-private fun Parameters.filters() = mutableListOf<Filter>()
-        .apply { this@filters.filter { key, _ -> key in validFilters }
-                .flattenForEach { key, value -> add(Filter(key, value)) } }
-        .let { it.toTypedArray() }
+private val validRangeFilters = listOf("updated")
+private val validValueFilters = listOf("uuid", "source")
+
+private fun Parameters.valueFilters() = mutableListOf<ValueParam>()
+        .apply { this@valueFilters.filter { key, _ -> key in validValueFilters }
+                .flattenForEach { key, value -> add(value.parseAsValueFilter(key, true).get()) } }
+
+private fun Parameters.rangeFilters() = mutableListOf<DateParam>()
+        .apply { this@rangeFilters.filter { key, _ -> key in validRangeFilters }
+                .flattenForEach { key, value -> add(value.parseAsDateFilter(key, true).get()) } }
