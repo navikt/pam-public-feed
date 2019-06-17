@@ -19,7 +19,7 @@ import java.util.regex.Pattern
  */
 fun String.parseAsDateFilter(name: String, supportInterval: Boolean): Optional<DateParam> {
     if(trim().isEmpty()) return Optional.empty()
-    val dateParam = if(isIntervalExpression && supportInterval) IntervalDateParam(name, this) else SingleDateParam(name, this)
+    val dateParam = if(isIntervalExpression() && supportInterval) IntervalDateParam(name, this) else SingleDateParam(name, this)
     return Optional.of(dateParam)
 }
 
@@ -50,11 +50,11 @@ interface Converter<T> {
  */
 interface DateParam {
 
-    fun name(): String
+    val name: String
 
-    fun startInclusive(): Boolean
+    val startInclusive: Boolean
 
-    fun endInclusive(): Boolean
+    val endInclusive: Boolean
 
     fun <T> start(converter: Converter<T>): T
 
@@ -64,20 +64,17 @@ interface DateParam {
 
 
 private val DATE_INTERVAL_SYNTAX = Pattern.compile("([\\[(])([^]),]+)\\s*,\\s*([^])]+)([])])")
-private const val DATE_INTERVAL_WILDCARD = "*"
-
+private const val wildcard = "*"
 private val startOfTime = LocalDateTime.now().minusYears(100)
 private val endOfTime = LocalDateTime.now().plusYears(100)
-
-private val String.isIntervalExpression: Boolean get() = DATE_INTERVAL_SYNTAX.matcher(trim()).matches()
-private val String.isWildcard: Boolean get() = this == DATE_INTERVAL_WILDCARD
 private val dateTimeFormatter = DateTimeFormatterBuilder()
         .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
         .toFormatter()
 
-private fun String.toStartDate(): TemporalAccessor = if(isWildcard) startOfTime else toDate()
-private fun String.toEndDate(): TemporalAccessor = if(isWildcard) endOfTime else toDate()
+private fun String.isIntervalExpression(): Boolean = DATE_INTERVAL_SYNTAX.matcher(trim()).matches()
+private fun String.toStartDate(): TemporalAccessor = if(this == wildcard) startOfTime else toDate()
+private fun String.toEndDate(): TemporalAccessor = if(this == wildcard) endOfTime else toDate()
 private fun String.toDate(): TemporalAccessor {
     if(this == "now") return LocalDateTime.now()
     if(this == "today") return LocalDate.now()
@@ -86,42 +83,30 @@ private fun String.toDate(): TemporalAccessor {
     return dateTimeFormatter.parse(this)
 }
 
-private class SingleDateParam(private val name: String, private val exp: String) : DateParam {
+private class SingleDateParam(override val name: String, private val exp: String) : DateParam {
 
-    override fun name() = name
+    override val startInclusive = true
+    override val endInclusive = true
 
-    override fun startInclusive() = true
+    private val startTime get() = exp.toStartDate()
+    private val endTime get() = exp.toEndDate()
 
-    override fun endInclusive() = true
+    override fun <T> start(converter: Converter<T>) = startTime.let { converter.convert(it) }
 
-    private fun startTime(): TemporalAccessor = exp.toDate()
-
-    private fun endTime(): TemporalAccessor = exp.toDate()
-
-    override fun <T> start(converter: Converter<T>) = startTime().let { converter.convert(it) }
-
-    override fun <T> end(converter: Converter<T>) = endTime().let { converter.convert(it) }
+    override fun <T> end(converter: Converter<T>) = endTime.let { converter.convert(it) }
 
 }
 
-class IntervalDateParam(private val name: String, exp: String) : DateParam {
+class IntervalDateParam(override val name: String, exp: String) : DateParam {
 
     private val intervalMatcher = DATE_INTERVAL_SYNTAX.matcher(exp.trim())
+            .apply { require(this.matches()) }
 
-    private val start: TemporalAccessor
-    private val end: TemporalAccessor
+    override val startInclusive get() = intervalMatcher.group(1) == "["
+    override val endInclusive get() = intervalMatcher.group(4) == "]"
 
-    init {
-        require(intervalMatcher.matches())
-        start = intervalMatcher.group(2).trim().toStartDate()
-        end = intervalMatcher.group(3).trim().toEndDate()
-    }
-
-    override fun name() = name
-
-    override fun startInclusive() = intervalMatcher.group(1) == "["
-
-    override fun endInclusive() = intervalMatcher.group(4) == "]"
+    private val start get() = intervalMatcher.group(2).trim().toStartDate()
+    private val end get() = intervalMatcher.group(3).trim().toEndDate()
 
     override fun <T> start(converter: Converter<T>) = converter.convert(start)
 

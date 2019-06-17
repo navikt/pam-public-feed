@@ -94,8 +94,8 @@ class DateFilterTest {
     fun dateIntervalDays() {
         val dp = "[2018-01-01,2018-01-02]". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isTrue()
-        Assertions.assertThat(dp.get().endInclusive()).isTrue()
+        Assertions.assertThat(dp.get().startInclusive).isTrue()
+        Assertions.assertThat(dp.get().endInclusive).isTrue()
         Assertions.assertThat(dp.get().start(converter).toString()).isEqualTo("2018-01-01")
         Assertions.assertThat(dp.get().end(converter).toString()).isEqualTo("2018-01-02")
     }
@@ -104,32 +104,32 @@ class DateFilterTest {
     fun dateIntervalDays_startExclusive() {
         val dp = "(2018-01-01,2018-01-02]". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isFalse()
-        Assertions.assertThat(dp.get().endInclusive()).isTrue()
+        Assertions.assertThat(dp.get().startInclusive).isFalse()
+        Assertions.assertThat(dp.get().endInclusive).isTrue()
     }
 
     @Test
     fun dateIntervalDays_endExclusive() {
         val dp = "[2018-01-01,2018-01-02)". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isTrue()
-        Assertions.assertThat(dp.get().endInclusive()).isFalse()
+        Assertions.assertThat(dp.get().startInclusive).isTrue()
+        Assertions.assertThat(dp.get().endInclusive).isFalse()
     }
 
     @Test
     fun dateIntervalDays_bothExclusive() {
         val dp = "(2018-01-01,2018-01-02)". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isFalse()
-        Assertions.assertThat(dp.get().endInclusive()).isFalse()
+        Assertions.assertThat(dp.get().startInclusive).isFalse()
+        Assertions.assertThat(dp.get().endInclusive).isFalse()
     }
 
     @Test
     fun dateIntervalDays_lowerBoundOpen() {
         val dp = "[*,2018-01-02]". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isTrue()
-        Assertions.assertThat(dp.get().endInclusive()).isTrue()
+        Assertions.assertThat(dp.get().startInclusive).isTrue()
+        Assertions.assertThat(dp.get().endInclusive).isTrue()
         Assertions.assertThat(dp.get().start(dateTimeConverter)).isBefore(LocalDateTime.now().minusYears(50))
         Assertions.assertThat(dp.get().end(converter).toString()).isEqualTo("2018-01-02")
     }
@@ -138,8 +138,8 @@ class DateFilterTest {
     fun dateIntervalDays_upperBoundOpen_exclusive() {
         val dp = "(2018-01-01,*)". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isFalse()
-        Assertions.assertThat(dp.get().endInclusive()).isFalse()
+        Assertions.assertThat(dp.get().startInclusive).isFalse()
+        Assertions.assertThat(dp.get().endInclusive).isFalse()
         Assertions.assertThat(dp.get().start(converter).toString()).isEqualTo("2018-01-01")
         Assertions.assertThat(dp.get().end(dateTimeConverter)).isAfter(LocalDateTime.now().plusYears(50))
     }
@@ -149,8 +149,8 @@ class DateFilterTest {
     fun dateIntervalWithTimes() {
         val dp = "[2018-01-01T12:00:01,2018-01-02T12:00]". parseAsDateFilter("somedate", true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isTrue()
-        Assertions.assertThat(dp.get().endInclusive()).isTrue()
+        Assertions.assertThat(dp.get().startInclusive).isTrue()
+        Assertions.assertThat(dp.get().endInclusive).isTrue()
         Assertions.assertThat(dp.get().start(converter).toString()).isEqualTo("2018-01-01T12:00:01")
         Assertions.assertThat(dp.get().end(converter).toString()).isEqualTo("2018-01-02T12:00:00")
     }
@@ -159,8 +159,8 @@ class DateFilterTest {
     fun dateIntervalIgnoreWhitespace() {
         val dp = " [ 2018-01-01T12:00:01, 2018-01-02T12:00  ]\t". parseAsDateFilter("somedate",  true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isTrue()
-        Assertions.assertThat(dp.get().endInclusive()).isTrue()
+        Assertions.assertThat(dp.get().startInclusive).isTrue()
+        Assertions.assertThat(dp.get().endInclusive).isTrue()
         Assertions.assertThat(dp.get().start(converter).toString()).isEqualTo("2018-01-01T12:00:01")
         Assertions.assertThat(dp.get().end(converter).toString()).isEqualTo("2018-01-02T12:00:00")
     }
@@ -169,8 +169,8 @@ class DateFilterTest {
     fun theWholeOfTimeIncludingBigBangs() {
         val dp = "[*, *]". parseAsDateFilter("somedate",  true)
         Assertions.assertThat(dp.isPresent()).isTrue()
-        Assertions.assertThat(dp.get().startInclusive()).isTrue()
-        Assertions.assertThat(dp.get().endInclusive()).isTrue()
+        Assertions.assertThat(dp.get().startInclusive).isTrue()
+        Assertions.assertThat(dp.get().endInclusive).isTrue()
         Assertions.assertThat(dp.get().start(dateTimeConverter)).isBefore(LocalDateTime.now().minusYears(50))
         Assertions.assertThat(dp.get().end(dateTimeConverter)).isAfter(LocalDateTime.now().plusYears(50))
     }
