@@ -23,27 +23,12 @@ fun String.parseAsDateFilter(name: String, supportInterval: Boolean): Optional<D
     return Optional.of(dateParam)
 }
 
-/**
- * Converter that transform a
- */
-interface Converter<T> {
 
-    fun convert(ta: TemporalAccessor): T
+val stringConverter = fun(ta: TemporalAccessor) =
+        if(ta.isSupported(ChronoField.HOUR_OF_DAY)) DateTimeFormatter.ISO_DATE_TIME.format(ta) else DateTimeFormatter.ISO_DATE.format(ta)
 
-    object ToString: Converter<String> {
-        override fun convert(ta: TemporalAccessor): String {
-            return if(ta.isSupported(ChronoField.HOUR_OF_DAY)) DateTimeFormatter.ISO_DATE_TIME.format(ta) else DateTimeFormatter.ISO_DATE.format(ta)
-        }
-
-    }
-
-    object ToLocalDateTime:Converter<LocalDateTime> {
-
-        override fun convert(ta: TemporalAccessor): LocalDateTime {
-            return if(ta.isSupported(ChronoField.HOUR_OF_DAY)) LocalDateTime.from(ta) else LocalDate.from(ta).atStartOfDay()
-        }
-    }
-}
+val dateTimeConverter = fun (ta: TemporalAccessor) =
+        if(ta.isSupported(ChronoField.HOUR_OF_DAY)) LocalDateTime.from(ta) else LocalDate.from(ta).atStartOfDay()
 
 /**
  * Represents a date filter
@@ -56,9 +41,9 @@ interface DateParam {
 
     val endInclusive: Boolean
 
-    fun <T> start(converter: Converter<T>): T
+    fun <T> start(converter: (TemporalAccessor) -> T): T
 
-    fun <T> end(converter: Converter<T>): T
+    fun <T> end(converter: (TemporalAccessor) -> T): T
 
 }
 
@@ -91,9 +76,9 @@ private class SingleDateParam(override val name: String, private val exp: String
     private val startTime get() = exp.toStartDate()
     private val endTime get() = exp.toEndDate()
 
-    override fun <T> start(converter: Converter<T>) = startTime.let { converter.convert(it) }
+    override fun <T> start(converter: (TemporalAccessor) -> T) = startTime.let { converter.invoke(it) }
 
-    override fun <T> end(converter: Converter<T>) = endTime.let { converter.convert(it) }
+    override fun <T> end(converter: (TemporalAccessor) -> T) = endTime.let { converter.invoke(it) }
 
 }
 
@@ -108,8 +93,8 @@ class IntervalDateParam(override val name: String, exp: String) : DateParam {
     private val start get() = intervalMatcher.group(2).trim().toStartDate()
     private val end get() = intervalMatcher.group(3).trim().toEndDate()
 
-    override fun <T> start(converter: Converter<T>) = converter.convert(start)
+    override fun <T> start(converter: (TemporalAccessor) -> T) = converter.invoke(start)
 
-    override fun <T> end(converter: Converter<T>) = converter.convert(end)
+    override fun <T> end(converter: (TemporalAccessor) -> T) = converter.invoke(end)
 
 }
