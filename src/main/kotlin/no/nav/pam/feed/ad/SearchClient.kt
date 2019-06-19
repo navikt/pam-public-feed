@@ -31,7 +31,7 @@ fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
 
         log.debug { "Auth subject: ${call.principal<JWTPrincipal>()?.payload?.subject}" }
 
-        val response = httpClient.post<SearchResponseRoot>(url) { body = call.parameters.toElasticRequest().json() }
+        val response = httpClient.post<SearchResponseRoot>(url) { body = TextContent(call.parameters.toElasticRequest().asJson(), ContentType.Application.Json) }
 
         call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
     }
@@ -49,8 +49,6 @@ fun StatusPages.Configuration.feed() {
         call.respond(HttpStatusCode.BadRequest, "Bad numeric parameter value: ${it.message}")
     }
 }
-
-private fun ElasticRequest.json() = TextContent(this.body, ContentType.Application.Json)
 
 private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(), this.rangeFilters())
 
