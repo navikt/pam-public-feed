@@ -62,7 +62,7 @@ private data class SearchRequest(
         val size: Int
 )
 
-private data class Sort(val field: String = "updated", val direction: String = "desc")
+private data class Sort(val field: String = "published", val direction: String = "desc")
 private data class QuerySource(val includes: List<String> = defaultFields, val excludes: List<String> = emptyList())
 private data class Query(val bool: BoolQuery = BoolQuery())
 private data class BoolQuery(val must_not: List<Term> = emptyList(), val filter: List<Term> = emptyList())
