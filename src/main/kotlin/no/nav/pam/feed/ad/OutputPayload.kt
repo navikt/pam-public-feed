@@ -32,7 +32,6 @@ data class FeedAd(
         val extent: String?,
         val starttime: String?,
         val positioncount: String?,
-        val employerhomepage: String?,
         val sector: String?)
 
 data class FeedLocation(
@@ -46,7 +45,8 @@ data class FeedLocation(
 data class FeedEmployer(
         val name: String,
         val orgnr: String?,
-        val description: String?)
+        val description: String?,
+        val homepage: String?)
 
 data class FeedOccupation(val level1: String,
                           val level2: String)

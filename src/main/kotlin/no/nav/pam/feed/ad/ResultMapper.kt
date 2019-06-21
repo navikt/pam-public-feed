@@ -30,7 +30,6 @@ fun mapAd(source: Source, host: String?): FeedAd {
             extent = source.properties["extent"],
             starttime = source.properties["starttime"],
             positioncount = source.properties["positioncount"],
-            employerhomepage = source.properties["employerhomepage"],
             sector = source.properties["sector"]
     )
 }
@@ -39,7 +38,8 @@ fun mapEmployer(source: Source): FeedEmployer {
     return FeedEmployer(
             source.businessName ?: source.employer.let { e -> e?.name ?: "" },
             source.employer.let { e -> e?.orgnr },
-            source.properties["employerdescription"]
+            source.properties["employerdescription"],
+            source.properties["employerhomepage"]
     )
 }
 
