@@ -24,7 +24,8 @@ data class FeedAd(
         val sourceurl: String?,
         val source: String?,
         val applicationDue: String?,
-        val occupations: List<String>,
+        val occupationCategories: List<FeedOccupation>,
+        val jobtitle: String?,
         val link: String,
         val employer: FeedEmployer,
         val engagementtype: String?,
@@ -46,3 +47,6 @@ data class FeedEmployer(
         val name: String,
         val orgnr: String?,
         val description: String?)
+
+data class FeedOccupation(val level1: String,
+                          val level2: String)

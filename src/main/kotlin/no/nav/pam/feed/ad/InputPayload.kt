@@ -19,8 +19,8 @@ data class Source(
         val businessName: String?,
         val source: String,
         val employer: Employer?,
-        @JsonProperty("locationList") val locations: List<Location>,
-        @JsonProperty("categoryList") val categories: List<Category>,
+        val locationList: List<Location>,
+        val occupationList: List<Occupation>,
         val properties: Map<String, String>)
 
 data class Location(
@@ -31,7 +31,8 @@ data class Location(
         val county: String?,
         val municipal: String?)
 
-data class Category(val name: String)
+data class Occupation(val level1: String,
+                      val level2: String)
 
 data class Employer(
         val name: String,

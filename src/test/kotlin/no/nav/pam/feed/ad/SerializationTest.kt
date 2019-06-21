@@ -51,6 +51,8 @@ class SerializationTest {
         assertEquals("979821506", feedAd.employer.orgnr)
         assertEquals(1, feedAd.workLocations.size)
         assertEquals("HORDALAND", feedAd.workLocations[0].county)
+        assertEquals("Helse og sosial", feedAd.occupationCategories[0].level1)
+        assertEquals("Psykologer og terapeuter", feedAd.occupationCategories[0].level2)
     }
 }
 
