@@ -123,10 +123,9 @@ private val defaultFields = listOf(
         "properties.engagementtype",
         "properties.extent",
         "properties.jobtitle",
-        "properties.occupation",
         "properties.positioncount",
         "properties.sector",
         "properties.starttime",
-        "categoryList",
+        "occupationList",
         "employer"
 )

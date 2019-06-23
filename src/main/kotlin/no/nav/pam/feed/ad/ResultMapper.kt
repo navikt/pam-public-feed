@@ -9,7 +9,6 @@ fun mapResult(root: SearchResponseRoot, page: Int, size: Int, host: String?): Fe
 }
 
 fun mapAd(source: Source, host: String?): FeedAd {
-    val locations = source.locations.map { l -> mapLocation(l) }
     val link = "https://$host/stillinger/stilling/${source.uuid}"
 
     return FeedAd(
@@ -17,20 +16,20 @@ fun mapAd(source: Source, host: String?): FeedAd {
             published = source.published,
             expires = source.expires,
             updated = source.updated,
-            workLocations = locations,
+            workLocations = source.locationList.map { l -> mapLocation(l) },
             title = source.title,
             description = source.properties["adtext"],
             sourceurl = source.properties["sourceurl"],
             source = source.source,
             applicationDue = source.properties["applicationdue"],
-            occupations = populateOccupations(source),
+            occupationCategories = source.occupationList.map { FeedOccupation(it.level1, it.level2) },
+            jobtitle = source.properties["jobtitle"],
             link = link,
             employer = mapEmployer(source),
             engagementtype = source.properties["engagementtype"],
             extent = source.properties["extent"],
             starttime = source.properties["starttime"],
             positioncount = source.properties["positioncount"],
-            employerhomepage = source.properties["employerhomepage"],
             sector = source.properties["sector"]
     )
 }
@@ -39,7 +38,8 @@ fun mapEmployer(source: Source): FeedEmployer {
     return FeedEmployer(
             source.businessName ?: source.employer.let { e -> e?.name ?: "" },
             source.employer.let { e -> e?.orgnr },
-            source.properties["employerdescription"]
+            source.properties["employerdescription"],
+            source.properties["employerhomepage"]
     )
 }
 
@@ -52,22 +52,4 @@ fun mapLocation(sourceLocation: Location): FeedLocation {
             sourceLocation.county,
             sourceLocation.municipal
     )
-}
-
-fun populateOccupations(source: Source): List<String> {
-    val occupations = arrayListOf<String>()
-
-    if (source.source.toUpperCase() == "DIR") {
-        for (category in source.categories) {
-            occupations.add(category.name)
-        }
-    } else {
-        if (source.properties["occupation"] != null) {
-            occupations.addAll(source.properties["occupation"]!!.split(";"))
-        } else if (source.properties["jobtitle"] != null) {
-            occupations.add(source.properties["jobtitle"]!!)
-        }
-    }
-
-    return occupations
 }

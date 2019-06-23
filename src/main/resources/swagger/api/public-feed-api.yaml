@@ -39,6 +39,7 @@ paths:
                 content:
                   - uuid: "2f5db4cc-c9d4-43c1-aa55-57e295194099"
                     published: "2019-05-06T12:27:12.29+02:00"
+                    updated: "2019-05-10T12:27:12.29+02:00"
                     expires: "2019-05-20T00:00:00+02:00"
                     workLocations:
                       - country: "NORGE"
@@ -54,11 +55,14 @@ paths:
                     source: "https://www.sourcelink.no/id"
                     applicationDue: "20.05.2019"
                     occupations:
-                      - "Salg"
+                      - level1: "Helse og sosial"
+                        level2: "Pyskologer og terapeuter"
                     link: "https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099"
                     employer:
-                      name: Arbeidsgiver
-                      orgnr: '123456789'
+                      name: "Arbeidsgiver"
+                      orgnr: "123456789"
+                      homepage: "https://emp-home-page"
+                      description: "The employer description"
                 totalElements: 5000
                 pageNumber: 0
                 pageSize: 1
@@ -88,19 +92,24 @@ components:
             properties:
               uuid:
                 type: string
-                title: NAVs id
+                title: Globally unique ad identifier
                 examples:
-                  - 2f5db4cc-c9d4-43c1-aa55-57e295194099
+                  2f5db4cc-c9d4-43c1-aa55-57e295194099
               published:
                 type: string
-                title: Date published by NAV
+                title: Date and time when ad was published
                 examples:
-                  - '2019-05-06T12:27:12.29+02:00'
+                  '2019-05-06T12:27:12.29+02:00'
+              updated:
+                type: string
+                title: Date and time of last update on ad
+                examples:
+                  '2019-05-07T09:30:12.66+02:00'
               expires:
                 type: string
-                title: Date the ad should be removed
+                title: The day the ad expires. Ads are normally shown up to and including this day.
                 examples:
-                  - '2019-05-20T00:00:00+02:00'
+                  '2019-05-20T00:00:00+02:00'
               workLocations:
                 type: array
                 title: List of work locations
@@ -110,61 +119,77 @@ components:
                     country:
                       type: string
                       examples:
-                        - NORGE
+                        NORGE
                     address:
                       type: string
                       examples:
-                        - GATEADRESSE 1
+                        GATEADRESSE 1
                     city:
                       type: string
                       examples:
-                        - OSLO
+                        OSLO
                     postalCode:
                       type: string
                       examples:
-                        - '0250'
+                        '0250'
                     county:
                       type: string
                       examples:
-                        - OSLO
+                        OSLO
                     municipal:
                       type: string
                       examples:
-                        - OSLO
+                        OSLO
               title:
                 type: string
                 title: Ad heading
                 examples:
-                  - Stillingstittel
+                  Annonseoverskrift !
+              jobtitle:
+                type: string
+                title: Job title
+                examples:
+                  Maskinfører
               description:
                 type: string
                 title: Ad content. HTML formatted
-                examples:
-                  - |
+                examples: |
                     <h1>Overskrift-eksempel</h1>
                     <p>Stillingstekst</p>
+                    <p>...</p>
               source:
                 type: string
                 title: Link to the source from which NAV got the ad
                 examples:
-                  - https://www.sourcelink.no/id
+                  https://www.sourcelink.no/id
               applicationDue:
                 type: string
                 examples:
-                  - 20.05.2019
+                  20.05.2019
               occupations:
                 type: array
+                title: List of occupation categories
                 items:
-                  type: string
-                  examples:
-                    - Salg
+                  type: object
+                  properties:
+                    level1:
+                      type: string
+                      title: First level occupation category (broad)
+                      examples:
+                        Helse og sosial
+                    level2:
+                      type: string
+                      title: Second level occupation category (higher level of detail)
+                      examples:
+                        Psykologer og terapeuter
               link:
                 type: string
                 title: Link to a human readable version of the ad at NAVs pages
                 examples:
-                  - https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099
+                  https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099
               employer:
                 type: object
+                title: Employer data
                 properties:
                   name:
                     type: string
@@ -174,6 +199,17 @@ components:
                     type: string
                     examples:
                       '123456789'
+                  homepage:
+                    type: string
+                    title: URL to employer home page
+                    examples:
+                      https://nav.no/
+                  description:
+                    type: string
+                    title: Description of employer
+                    examples: |
+                        Arbeids- og velferdsetaten består av den statlige Arbeids- og velferdsetaten (herunder Arbeids- og velferdsdirektoratet)
+                        og de delene av kommunenes sosialtjenester som inngår i de felles lokale kontorene.
         totalElements:
           type: integer
           title: Total count of ads found. Max 5000
