@@ -28,6 +28,24 @@ paths:
           required: false
           schema:
             type: "integer"
+        - name: "updated"
+          in: "query"
+          description: "filter ads updated within a certain date, date range or date and time range. Ranges should be prefixed with either parenthesis or brackets. Parenthesis indicates that the value should be excluded, brackets indicate that it should be included. Dates should be separated with comma. Date format is either yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss. Examples could be: [2019-06-12T23:00:01,2019-06-14], [2019-06-12,2019-06-13),[2019-06-12,2019-06-13), 2019-06-12. Some literals are also supported, like today, tomorrow and yesterday for dates. And now indicating the present date and time"
+          required: false
+          schema:
+            type: "string"
+        - name: "id"
+          in: "query"
+          description: "fetch an ad with a specific uuid"
+          required: false
+          schema:
+            type: "string"
+        - name: "source"
+          in: "query"
+          description: "only fetch ads from a specific source, or not from a specific source if prefixed with \"!\!. \"SBL\" will fetch ads from the SBL source, while \"!SBL\" will fetch ads from every source except SBL"
+          required: false
+          schema:
+            type: "string"
       responses:
         '200':
           description: Found ads
@@ -157,11 +175,14 @@ components:
                     <h1>Overskrift-eksempel</h1>
                     <p>Stillingstekst</p>
                     <p>...</p>
-              source:
+              sourceurl:
                 type: string
                 title: Link to the source from which NAV got the ad
                 examples:
                   https://www.sourcelink.no/id
+              source:
+                type: string
+                title: The source from which NAV got the ad, enumerated
               applicationDue:
                 type: string
                 examples:
@@ -187,6 +208,27 @@ components:
                 title: Link to a human readable version of the ad at NAVs pages
                 examples:
                   https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099
+              engagementtype:
+                type: string
+                title: Type of engagement
+                examples:
+                  Fast
+              extent:
+                type: string
+                title: Extent of the position
+                examples:
+                  Heltid
+              starttime:
+                type: string
+                title: Indicates when the job employee is expected to start
+                examples:
+                  Etter avtale
+              positioncount:
+                type: string
+              sector:
+                type: string
+                examples:
+                  privat
               employer:
                 type: object
                 title: Employer data
