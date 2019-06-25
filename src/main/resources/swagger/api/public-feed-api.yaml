@@ -34,9 +34,13 @@ paths:
              Filter ads published on a certain date/time or within a date/time range.
              Ranges should be surrounded with either parenthesis or brackets. Parenthesis indicates that the value
              should be non-inclusive, brackets indicate that it should be inclusive. Dates should be separated with comma.
-             Date format is either yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss. Examples could be: [2019-06-12T23:00:01,2019-06-14],
-             [2019-06-12,2019-06-13),[2019-06-12,2019-06-13), 2019-06-12. Some literals are also supported, like 'today',
-             'tomorrow' and 'yesterday' for dates. And 'now' indicating the present date and time.
+             Date format is either 'yyyy-MM-dd' or 'yyyy-MM-ddTHH:mm:ss'. Examples could be: '[2019-06-12T23:00:01,2019-06-14]',
+             '[2019-06-12,2019-06-13)', '[2019-06-12,2019-06-13)', '2019-06-12'.
+
+             A wildcard date (e.g. infinitely far into the future or the past) is represented by an asterisk '*'. Example:
+             '[*,2019-06-01)' will match all ads published before June of 2019, while [2019-06-01,*) will match all ads
+             published on or after June of 2019. Some literals are also supported, like 'today',
+             'tomorrow' and 'yesterday' for dates. And 'now' indicating the current date and time.
           required: false
           schema:
             type: "string"
