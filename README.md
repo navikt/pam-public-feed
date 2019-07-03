@@ -31,9 +31,6 @@ Requests and responses are documented with
 swagger feel free to use the token above.
 
 
--------------------
-[Developers documentation](Devdoc.md)
-
 ## Ad expiry
 
 It is important to respect ad expiry if your store the ads in your own
@@ -90,3 +87,6 @@ If you need to get all currently active ads, there are a few options:
    possibly other data, which can be used to bring the complete number of
    matching ads well below the limit of 5000. In that case, you can assume you
    have all relevant ads after one feed page-through.
+
+-------------------
+[Developers documentation](Devdoc.md)
