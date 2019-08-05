@@ -35,7 +35,7 @@ data class FeedAd(
         val sector: String?)
 
 data class FeedLocation(
-        val country: String,
+        val country: String?,
         val address: String?,
         val city: String?,
         val postalCode: String?,

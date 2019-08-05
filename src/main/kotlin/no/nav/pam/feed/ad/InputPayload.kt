@@ -24,7 +24,7 @@ data class Source(
         val properties: Map<String, String>)
 
 data class Location(
-        val country: String,
+        val country: String?,
         val address: String?,
         val city: String?,
         val postalCode: String?,

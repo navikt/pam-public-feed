@@ -42,7 +42,7 @@ paths:
             type: "string"
         - name: "source"
           in: "query"
-          description: "only fetch ads from a specific source, or not from a specific source if prefixed with \"!\!. \"SBL\" will fetch ads from the SBL source, while \"!SBL\" will fetch ads from every source except SBL"
+          description: "only fetch ads from a specific source, or not from a specific source if prefixed with \"!\". \"SBL\" will fetch ads from the SBL source, while \"!SBL\" will fetch ads from every source except SBL"
           required: false
           schema:
             type: "string"
