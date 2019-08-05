@@ -28,9 +28,27 @@ paths:
           required: false
           schema:
             type: "integer"
+        - name: "published"
+          in: "query"
+          description: |
+             Filter ads published on a certain date/time or within a date/time range.
+             Ranges should be surrounded with either parenthesis or brackets. Parenthesis indicates that the value
+             should be non-inclusive, brackets indicate that it should be inclusive. Dates should be separated with comma.
+             Date format is either 'yyyy-MM-dd' or 'yyyy-MM-ddTHH:mm:ss'. Examples could be: '[2019-06-12T23:00:01,2019-06-14]',
+             '[2019-06-12,2019-06-13)', '[2019-06-12,2019-06-13)', '2019-06-12'.
+
+             A wildcard date (e.g. infinitely far into the future or the past) is represented by an asterisk '*'. Example:
+             '[*,2019-06-01)' will match all ads published before June of 2019, while [2019-06-01,*) will match all ads
+             published on or after June of 2019. Some literals are also supported, like 'today',
+             'tomorrow' and 'yesterday' for dates. And 'now' indicating the current date and time.
+          required: false
+          schema:
+            type: "string"
         - name: "updated"
           in: "query"
-          description: "filter ads updated within a certain date, date range or date and time range. Ranges should be prefixed with either parenthesis or brackets. Parenthesis indicates that the value should be excluded, brackets indicate that it should be included. Dates should be separated with comma. Date format is either yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss. Examples could be: [2019-06-12T23:00:01,2019-06-14], [2019-06-12,2019-06-13),[2019-06-12,2019-06-13), 2019-06-12. Some literals are also supported, like today, tomorrow and yesterday for dates. And now indicating the present date and time"
+          description: |
+            Filter ads updated on a certain date/time or within date/time range.
+            See description of 'published'-filter for the date range syntax.
           required: false
           schema:
             type: "string"
@@ -42,7 +60,9 @@ paths:
             type: "string"
         - name: "source"
           in: "query"
-          description: "only fetch ads from a specific source, or not from a specific source if prefixed with \"!\". \"SBL\" will fetch ads from the SBL source, while \"!SBL\" will fetch ads from every source except SBL"
+          description: |
+            Only fetch ads from a specific source, or not from a specific source if prefixed with "!".
+            "SBL" will fetch ads from the SBL source, while "!SBL" will fetch ads from every source except SBL.
           required: false
           schema:
             type: "string"

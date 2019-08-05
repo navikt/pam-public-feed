@@ -1,3 +1,11 @@
+## RELEASE - 0.16.86-f196b8e
+#### New in this release: 
++ 2019-06-25 [Feature] Allow range filtering on published date/time
+## RELEASE - 0.15.85-8bb3335
+#### New in this release: 
++ 2019-06-21 [Move] employer homepage into employer object in feed
++ 2019-06-21 [Feature] Use simplified occupation categories in feed
++ 2019-05-10 [Published public token]
 ## RELEASE - 0.14.76-f749fed
 #### New in this release: 
 + 2019-05-07 [Document usage in README and API in swagger]

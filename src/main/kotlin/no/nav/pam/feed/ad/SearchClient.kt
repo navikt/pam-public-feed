@@ -54,7 +54,7 @@ private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page,
 
 private val Parameters.size get() = (this["size"]?.toInt() ?: 20).coerceIn(1 .. 100 )
 private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.size)
-private val validRangeFilters = listOf("updated")
+private val validRangeFilters = listOf("updated", "published")
 private val validValueFilters = listOf("uuid", "source")
 
 private fun Parameters.valueFilters() = mutableListOf<ValueParam>()
