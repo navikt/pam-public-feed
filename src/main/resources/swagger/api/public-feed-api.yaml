@@ -52,7 +52,7 @@ paths:
           required: false
           schema:
             type: "string"
-        - name: "id"
+        - name: "uuid"
           in: "query"
           description: "fetch an ad with a specific uuid"
           required: false
