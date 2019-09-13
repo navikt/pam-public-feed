@@ -238,6 +238,20 @@ class ApiTest {
     }
 
     @Test
+    fun location_Size1() {
+        val feed: FeedRoot = runBlocking {
+            httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=1&municipal=OSLO&county=OSLO") {
+                header("Authorization", "Bearer ${obtainApiTokenValue()}")
+            }
+        }
+
+        assertEquals(1, feed.pageSize)
+        assertEquals(0, feed.pageNumber)
+        assertTrue(feed.first)
+        assertFalse(feed.last)
+    }
+
+    @Test
     fun paging_Size1Page331() {
         val feed: FeedRoot = runBlocking {
             httpClient.get<FeedRoot>(appUrl + "/public-feed/api/v1/ads?size=1&page=331") {

@@ -57,16 +57,22 @@ fun StatusPages.Configuration.feed() {
     }
 }
 
-private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(), this.rangeFilters())
+private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(),
+        this.locationValueFilters(), this.rangeFilters())
 
 private val Parameters.size get() = (this["size"]?.toInt() ?: 20).coerceIn(1 .. 100 )
 private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.size)
 private val validRangeFilters = listOf("updated", "published")
-private val validValueFilters = listOf("uuid", "source", "municipal", "county", "city", "orgnr")
+private val validValueFilters = listOf("uuid", "source", "orgnr")
+private val validLocationValueFilters = listOf("municipal", "county")
 
 private fun Parameters.valueFilters() = mutableListOf<ValueParam>()
         .apply { this@valueFilters.filter { key, _ -> key in validValueFilters }
                 .flattenForEach { key, value -> add(value.parseAsValueFilter(key, true).get()) } }
+
+private fun Parameters.locationValueFilters() = mutableListOf<ValueParam>()
+        .apply { this@locationValueFilters.filter { key, _ -> key in validLocationValueFilters }
+                .flattenForEach { key, value -> add(value.parseAsLocationValueFilter(key, true).get()) } }
 
 private fun Parameters.rangeFilters() = mutableListOf<DateParam>()
         .apply { this@rangeFilters.filter { key, _ -> key in validRangeFilters }
