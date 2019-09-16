@@ -17,7 +17,7 @@ import io.ktor.routing.get
 import io.ktor.util.filter
 import io.ktor.util.flattenForEach
 import mu.KotlinLogging
-import org.slf4j.MDC
+import mu.withLoggingContext
 import java.io.IOException
 
 internal const val MAX_TOTAL_HITS = 5000
@@ -28,20 +28,18 @@ fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
     val url = "$searchApiHost/public-feed/ad/_search"
     log.info("Using search API host: ${searchApiHost}")
 
-    try {
-        get("/api/v1/ads") {
-            val subject = call.principal<JWTPrincipal>()?.payload?.subject ?: "?"
-            MDC.put("U", subject)
+    get("/api/v1/ads") {
+        val subject = call.principal<JWTPrincipal>()?.payload?.subject ?: "?"
+        withLoggingContext("U" to subject) {
             log.debug { "Auth subject: ${subject}" }
+            val elasticRequestAsJson = call.parameters.toElasticRequest().asJson()
 
             val response = httpClient.post<SearchResponseRoot>(url) {
-                body = TextContent(call.parameters.toElasticRequest().asJson(), ContentType.Application.Json)
+                body = TextContent(elasticRequestAsJson, ContentType.Application.Json)
             }
 
             call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
         }
-    } finally {
-        MDC.remove("U")
     }
 }
 
