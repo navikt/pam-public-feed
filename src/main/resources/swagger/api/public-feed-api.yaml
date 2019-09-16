@@ -66,6 +66,24 @@ paths:
           required: false
           schema:
             type: "string"
+        - name: "orgnr"
+          in: "query"
+          description: "Only fetch ads from the organisation with the given orgnr."
+          required: false
+          schema:
+            type: "string"
+        - name: "municipal"
+          in: "query"
+          description: "Only fetch ads from the given municipality, e.g. TRONDHEIM."
+          required: false
+          schema:
+            type: "string"
+        - name: "county"
+          in: "query"
+          description: "Only fetch ads from the given county, e.g. TRØNDELAG."
+          required: false
+          schema:
+            type: "string"
       responses:
         '200':
           description: Found ads
