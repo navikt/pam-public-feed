@@ -11,6 +11,7 @@ internal class ElasticRequest(
         pageSize: Int,
         currentPage: Int,
         valueFilters: List<ValueParam> = listOf(),
+        locationValueFilters: List<ValueParam> = listOf(),
         dateFilters: List<DateParam> = listOf()) {
 
     private val defaultValue: ValueParam = "ACTIVE".parseAsValueFilter("status", true).get()
@@ -23,9 +24,14 @@ internal class ElasticRequest(
             dateFilters.map { it.asTerm() })
             .flatten().filterNotNull()
     private val negatedTerms: List<Term> = valueFilters.mapNotNull { it.asNegatedTerm() }
+    private val locationTerms: List<Term> = listOf(
+            locationValueFilters.map{ it.asTerm() })
+            .flatten().filterNotNull()
 
     internal fun asJson() = objectMapper.writeValueAsString(SearchRequest(
-            query = Query(bool = BoolQuery(must_not = negatedTerms, filter = terms)),
+            query = Query(bool = BoolQuery(must_not = negatedTerms, filter = terms,
+                    must = if (locationTerms.isEmpty()) emptyList()
+                            else listOf(Nested(NestedQuery(query = Query(bool = BoolQuery(filter = locationTerms))))))),
             from = from,
             size = size))
             .apply { log.debug { this } }
@@ -65,7 +71,10 @@ private data class SearchRequest(
 private data class Sort(val field: String = "published", val direction: String = "desc")
 private data class QuerySource(val includes: List<String> = defaultFields, val excludes: List<String> = emptyList())
 private data class Query(val bool: BoolQuery = BoolQuery())
-private data class BoolQuery(val must_not: List<Term> = emptyList(), val filter: List<Term> = emptyList())
+private data class BoolQuery(val must_not: List<Term> = emptyList(), val filter: List<Term> = emptyList(),
+                             val must: List<Nested> = emptyList())
+private data class Nested(val nested: NestedQuery)
+private data class NestedQuery(val path: String = "locationList", val query: Query)
 private data class Range(val name: String, val startOperator: String, val endOperator: String, val start: String, val end: String): Term
 private data class Value(val name: String, val value: String): Term
 

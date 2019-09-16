@@ -12,8 +12,27 @@ import java.util.*
  */
 fun String.parseAsValueFilter(name: String, trim: Boolean): Optional<ValueParam> {
     if(this.trim(trim).parsedValue.isEmpty()) return Optional.empty()
+    var prefix = ""
+    if ("orgnr".equals(name))
+        prefix = "employer."
 
-    return Optional.of(ValueParam(name, this, trim))
+    return Optional.of(ValueParam(prefix + name, this, trim))
+}
+
+/**
+ * Parse potentially negated and comma-separated multi-value parameter.
+ *
+ * @param name
+ * @param trim
+ * @return empty optional if no values, parsed param values otherwise
+ */
+fun String.parseAsLocationValueFilter(name: String, trim: Boolean): Optional<ValueParam> {
+    if(this.trim(trim).parsedValue.isEmpty()) return Optional.empty()
+    val esName = if (listOf("municipal", "county").contains(name))
+                        "locationList.${name}.keyword"
+                else name
+
+    return Optional.of(ValueParam(esName, this, trim))
 }
 
 /**

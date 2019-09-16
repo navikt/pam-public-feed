@@ -17,6 +17,7 @@ import io.ktor.routing.get
 import io.ktor.util.filter
 import io.ktor.util.flattenForEach
 import mu.KotlinLogging
+import mu.withLoggingContext
 import java.io.IOException
 
 internal const val MAX_TOTAL_HITS = 5000
@@ -28,14 +29,18 @@ fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
     log.info("Using search API host: ${searchApiHost}")
 
     get("/api/v1/ads") {
+        val subject = call.principal<JWTPrincipal>()?.payload?.subject ?: "?"
+        withLoggingContext("U" to subject) {
+            log.debug { "Auth subject: ${subject}" }
+            val elasticRequestAsJson = call.parameters.toElasticRequest().asJson()
 
-        log.debug { "Auth subject: ${call.principal<JWTPrincipal>()?.payload?.subject}" }
+            val response = httpClient.post<SearchResponseRoot>(url) {
+                body = TextContent(elasticRequestAsJson, ContentType.Application.Json)
+            }
 
-        val response = httpClient.post<SearchResponseRoot>(url) { body = TextContent(call.parameters.toElasticRequest().asJson(), ContentType.Application.Json) }
-
-        call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
+            call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
+        }
     }
-
 }
 
 fun StatusPages.Configuration.feed() {
@@ -50,16 +55,22 @@ fun StatusPages.Configuration.feed() {
     }
 }
 
-private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(), this.rangeFilters())
+private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(),
+        this.locationValueFilters(), this.rangeFilters())
 
 private val Parameters.size get() = (this["size"]?.toInt() ?: 20).coerceIn(1 .. 100 )
 private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.size)
 private val validRangeFilters = listOf("updated", "published")
-private val validValueFilters = listOf("uuid", "source")
+private val validValueFilters = listOf("uuid", "source", "orgnr")
+private val validLocationValueFilters = listOf("municipal", "county")
 
 private fun Parameters.valueFilters() = mutableListOf<ValueParam>()
         .apply { this@valueFilters.filter { key, _ -> key in validValueFilters }
                 .flattenForEach { key, value -> add(value.parseAsValueFilter(key, true).get()) } }
+
+private fun Parameters.locationValueFilters() = mutableListOf<ValueParam>()
+        .apply { this@locationValueFilters.filter { key, _ -> key in validLocationValueFilters }
+                .flattenForEach { key, value -> add(value.parseAsLocationValueFilter(key, true).get()) } }
 
 private fun Parameters.rangeFilters() = mutableListOf<DateParam>()
         .apply { this@rangeFilters.filter { key, _ -> key in validRangeFilters }
