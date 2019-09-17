@@ -18,7 +18,7 @@
         <kotlin_loggin.version>1.5.8</kotlin_loggin.version>
         <prometheus.version>0.6.0</prometheus.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
-        <jackson.version>2.10.0.pr1</jackson.version>
+        <jackson.version>2.10.0.pr2</jackson.version>
     </properties>
 
 
