@@ -68,9 +68,10 @@ paths:
             type: "string"
         - name: "orgnr"
           in: "query"
-          description: "Only fetch ads from the organisation with the given orgnr, or not from the given orgnr if prefixed with "!".
-                       "987654321" will only fetch ads from the organisation with orgnr 987654321, while "!987654321" will
-                       fetch ads from all organisations exception 987654321.
+          description: | 
+            Only fetch ads from the organisation with the given orgnr, or not from the given orgnr if prefixed with "!".
+            "987654321" will only fetch ads from the organisation with orgnr 987654321, while "!987654321" will
+            fetch ads from all organisations exception 987654321.
           required: false
           schema:
             type: "string"
