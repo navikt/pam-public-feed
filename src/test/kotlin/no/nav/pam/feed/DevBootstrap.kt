@@ -23,7 +23,7 @@ val acceptInsecureSslClientFactory: () -> HttpClient = {
 }
 
 val localTestEnvironment: Environment = Environment(
-        searchApiHost =  getEnvVar("SEARCH_API_HOST", "https://pam-search-api.nais.oera-q.local"),
+        searchApiHost =  getEnvVar("SEARCH_API_HOST", "http://localhost:9010"),
         indentJson = true,
         auth = AuthConfig(optional = true, secret = getEnvVar("AUTH_SECRET", "dev-key"))
 )

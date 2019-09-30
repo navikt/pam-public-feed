@@ -1,7 +1,5 @@
 package no.nav.pam.feed.ad
 
-import java.util.*
-
 
 /**
  * Parse potentially negated and comma-separated multi-value parameter.
@@ -10,13 +8,13 @@ import java.util.*
  * @param trim
  * @return empty optional if no values, parsed param values otherwise
  */
-fun String.parseAsValueFilter(name: String, trim: Boolean): Optional<ValueParam> {
-    if(this.trim(trim).parsedValue.isEmpty()) return Optional.empty()
+fun String.parseAsValueFilter(name: String, trim: Boolean): ValueParam? {
+    if(this.trim(trim).parsedValue.isEmpty()) return null
     var prefix = ""
     if ("orgnr".equals(name))
         prefix = "employer."
 
-    return Optional.of(ValueParam(prefix + name, this, trim))
+    return ValueParam(prefix + name, this, trim)
 }
 
 /**
@@ -26,13 +24,13 @@ fun String.parseAsValueFilter(name: String, trim: Boolean): Optional<ValueParam>
  * @param trim
  * @return empty optional if no values, parsed param values otherwise
  */
-fun String.parseAsLocationValueFilter(name: String, trim: Boolean): Optional<ValueParam> {
-    if(this.trim(trim).parsedValue.isEmpty()) return Optional.empty()
+fun String.parseAsLocationValueFilter(name: String, trim: Boolean): ValueParam? {
+    if(this.trim(trim).parsedValue.isEmpty()) return null
     val esName = if (listOf("municipal", "county").contains(name))
                         "locationList.${name}.keyword"
                 else name
 
-    return Optional.of(ValueParam(esName, this.toUpperCase(), trim))
+    return ValueParam(esName, this.toUpperCase(), trim)
 }
 
 /**
