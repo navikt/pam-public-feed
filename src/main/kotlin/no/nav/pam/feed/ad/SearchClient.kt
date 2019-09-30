@@ -32,7 +32,18 @@ fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
         val subject = call.principal<JWTPrincipal>()?.payload?.subject ?: "?"
         withLoggingContext("U" to subject) {
             log.debug { "Auth subject: ${subject}" }
-            val elasticRequestAsJson = call.parameters.toElasticRequest().asJson()
+
+            val elasticRequest = ElasticRequestBuilder(call.parameters["size"], call.parameters["page"])
+                    .updated(call.parameters["updated"])
+                    .published(call.parameters["published"])
+                    .uuid(call.parameters["uuid"])
+                    .source(call.parameters["source"])
+                    .orgnr(call.parameters["orgnr"])
+                    .municipal(call.parameters["municipal"])
+                    .county(call.parameters["county"])
+                    .build()
+
+            val elasticRequestAsJson = elasticRequest.asJson()
 
             val response = httpClient.post<SearchResponseRoot>(url) {
                 body = TextContent(elasticRequestAsJson, ContentType.Application.Json)
@@ -55,23 +66,5 @@ fun StatusPages.Configuration.feed() {
     }
 }
 
-private fun Parameters.toElasticRequest() = ElasticRequest(this.size, this.page, this.valueFilters(),
-        this.locationValueFilters(), this.rangeFilters())
-
 private val Parameters.size get() = (this["size"]?.toInt() ?: 20).coerceIn(1 .. 100 )
 private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.size)
-private val validRangeFilters = listOf("updated", "published")
-private val validValueFilters = listOf("uuid", "source", "orgnr")
-private val validLocationValueFilters = listOf("municipal", "county")
-
-private fun Parameters.valueFilters() = mutableListOf<ValueParam>()
-        .apply { this@valueFilters.filter { key, _ -> key in validValueFilters }
-                .flattenForEach { key, value -> add(value.parseAsValueFilter(key, true).get()) } }
-
-private fun Parameters.locationValueFilters() = mutableListOf<ValueParam>()
-        .apply { this@locationValueFilters.filter { key, _ -> key in validLocationValueFilters }
-                .flattenForEach { key, value -> add(value.parseAsLocationValueFilter(key, true).get()) } }
-
-private fun Parameters.rangeFilters() = mutableListOf<DateParam>()
-        .apply { this@rangeFilters.filter { key, _ -> key in validRangeFilters }
-                .flattenForEach { key, value -> add(value.parseAsDateFilter(key, true).get()) } }

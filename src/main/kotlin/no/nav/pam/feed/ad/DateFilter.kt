@@ -17,10 +17,9 @@ import java.util.regex.Pattern
  * @return a parsed date param, or empty optional if value is completely empty
  * @throws IllegalArgumentException in case of unparseable date(s)
  */
-fun String.parseAsDateFilter(name: String, supportInterval: Boolean): Optional<DateParam> {
-    if(trim().isEmpty()) return Optional.empty()
-    val dateParam = if(isIntervalExpression() && supportInterval) IntervalDateParam(name, this) else SingleDateParam(name, this)
-    return Optional.of(dateParam)
+fun String.parseAsDateFilter(name: String, supportInterval: Boolean): DateParam? {
+    if(trim().isEmpty()) return null
+    return if(isIntervalExpression() && supportInterval) IntervalDateParam(name, this) else SingleDateParam(name, this)
 }
 
 
