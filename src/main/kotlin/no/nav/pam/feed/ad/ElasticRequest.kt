@@ -3,6 +3,7 @@ package no.nav.pam.feed.ad
 import mu.KotlinLogging
 import org.apache.lucene.search.join.ScoreMode
 import org.elasticsearch.index.query.NestedQueryBuilder
+import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.index.query.RangeQueryBuilder
 import org.elasticsearch.search.builder.SearchSourceBuilder
@@ -21,7 +22,6 @@ class ElasticRequest(
     fun asJson(): String {
 
         val queryBuilder = QueryBuilders.boolQuery()
-                .must(locationQuery)
                 .apply { filter().addAll(filterQueries) }
                 .apply { mustNot().addAll(mustNotQueries) }
 
@@ -36,16 +36,33 @@ class ElasticRequest(
         return request.apply { log.debug { this } }
     }
 
-    private val valueQueries = this.valueFilters.filter { !it.isNegated }.map { it.toTermQuery() }
+    private val valueQueries = this.valueFilters.filter { !it.isNegated }.flatMap { it.toTermQueries() }
     private val dateQueries = dateFilters.map { it.toRangeQuery() }
-    private val filterQueries = dateQueries + valueQueries
-    private val mustNotQueries = valueFilters.filter { it.isNegated }.map { it.toTermQuery() }
-    private val locationFilterQueries = locationValueFilters.map { it.toTermQuery() }
+    private val filterQueries = dateQueries + valueQueries + LocationQuery(locationValueFilters).filter()
+    private val mustNotQueries = valueFilters.filter { it.isNegated }.flatMap { it.toTermQueries() }
 
-    private val locationQuery = NestedQueryBuilder(
-            "locationList",
-            QueryBuilders.boolQuery().apply { filter().addAll(locationFilterQueries) },
-            ScoreMode.Avg)
+}
+
+
+private class LocationQuery(val filters: List<ValueParam> = listOf()) {
+
+    internal fun filter(): List<QueryBuilder> {
+        if(filters.isEmpty()) return emptyList()
+
+        // This gets ugly... first groups all values by name - so we get diffent lists for municipalities and counties
+        // then convert the contents to of each list to term queries
+        // the package all term queries into a bool query - so we have one bool query for minicipalities and one for counties
+        // Finally aggregate them into different filters ofthe locationFilter - so we get an AND-relation between the different groups (municipalities and counties)
+        val locationQuery = filters.groupBy { it.name } // group by name (type)
+                .mapValues { it.value.flatMap { it.toTermQueries() } } // transform to a list of term queries
+                .mapValues { QueryBuilders.boolQuery().apply { should().addAll( it.value ) } } // convert term query list to a bool query with each element as should
+                .values.fold(QueryBuilders.boolQuery()) { acc, it -> acc.filter(it)} // Fold the queries created in the last step into a wrapping bool filter query
+
+        return listOf(NestedQueryBuilder(
+                "locationList",
+                locationQuery,
+                ScoreMode.Avg))
+    }
 
 }
 
@@ -77,9 +94,9 @@ private val sourceIncludes = arrayOf(
         "employer"
 )
 
-fun ValueParam.toTermQuery() = QueryBuilders.termQuery(this.name, this.value())
+private fun ValueParam.toTermQueries() = values().map { QueryBuilders.termQuery(this.name, it) }
 
-fun DateParam.toRangeQuery(): RangeQueryBuilder {
+private fun DateParam.toRangeQuery(): RangeQueryBuilder {
     val range = QueryBuilders.rangeQuery(this.name)
     if (startInclusive) range.gte(start(stringConverter)) else range.gt(start(stringConverter))
     if (endInclusive) range.lte(end(stringConverter)) else range.lt(end(stringConverter))
