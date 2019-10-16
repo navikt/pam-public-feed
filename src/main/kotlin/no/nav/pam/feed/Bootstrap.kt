@@ -21,11 +21,22 @@ import io.ktor.features.DefaultHeaders
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpHeaders
 import io.ktor.jackson.jackson
+import io.ktor.metrics.micrometer.MicrometerMetrics
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.micrometer.core.instrument.Clock
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
+import io.micrometer.core.instrument.binder.logging.LogbackMetrics
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics
+import io.micrometer.prometheus.PrometheusConfig
+import io.micrometer.prometheus.PrometheusMeterRegistry
+import io.prometheus.client.CollectorRegistry
 import mu.KotlinLogging
 import no.nav.pam.feed.Bootstrap.start
 import no.nav.pam.feed.ad.feed
@@ -71,12 +82,24 @@ fun searchApi(
             header(HttpHeaders.CacheControl, "public, max-age=300")
             header(HttpHeaders.Server, "ktor")
         }
+        install(MicrometerMetrics) {
+            registry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT, CollectorRegistry.defaultRegistry, Clock.SYSTEM)
+            meterBinders = listOf(
+                    ClassLoaderMetrics(),
+                    JvmMemoryMetrics(),
+                    JvmGcMetrics(),
+                    ProcessorMetrics(),
+                    JvmThreadMetrics(),
+                    LogbackMetrics()
+            )
+        }
         install(Authentication) {
             jwt {
                 verifier(tokenFactory.newHmacJwtVerifier())
                 this.realm = "${environment.auth.audience}, contact ${environment.auth.contact} for access"
                 validate { credential ->
-                    if (credential.payload.audience.contains(environment.auth.audience))
+                    credential.payload.subject.substringAfterLast("@")
+                    return@validate if (credential.payload.audience.contains(environment.auth.audience))
                         JWTPrincipal(credential.payload)
                     else
                         null
