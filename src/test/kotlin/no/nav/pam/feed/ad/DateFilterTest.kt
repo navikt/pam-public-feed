@@ -1,7 +1,7 @@
 package no.nav.pam.feed.ad
 
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import org.assertj.core.api.Assertions.assertThat as assertThat
 

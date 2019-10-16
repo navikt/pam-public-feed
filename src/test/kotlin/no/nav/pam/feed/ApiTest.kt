@@ -3,7 +3,7 @@ package no.nav.pam.feed
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockHttpResponse
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
@@ -36,18 +36,17 @@ class ApiTest {
 
     companion object TestServices {
 
-        private val mockSearchApi = MockEngine {
-            when (url.fullPath) {
+        private val mockSearchApi = MockEngine { request ->
+            when (request.url.fullPath) {
                 "/public-feed/ad/_search" -> {
-                    MockHttpResponse(
-                            call,
-                            HttpStatusCode.OK,
+                    respond(
                             javaClass.getResourceAsStream("/search.sample/result.json").toByteReadChannel(),
+                            HttpStatusCode.OK,
                             headersOf("Content-Type" to listOf("application/json; charset=utf-8"))
                     )
                 }
                 else -> {
-                    error("Unhandled ${url.fullPath}")
+                    error("Unhandled ${request.url.fullPath}")
                 }
             }
         }

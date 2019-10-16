@@ -14,8 +14,6 @@ import io.ktor.request.host
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
-import io.ktor.util.filter
-import io.ktor.util.flattenForEach
 import mu.KotlinLogging
 import mu.withLoggingContext
 import java.io.IOException
@@ -24,7 +22,11 @@ internal const val MAX_TOTAL_HITS = 5000
 
 private val log = KotlinLogging.logger { }
 
-fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
+fun Route.feed(
+        searchApiHost: String,
+        httpClient: HttpClient,
+        searchMeter: SearchMeter = SearchMeter()
+) {
     val url = "$searchApiHost/public-feed/ad/_search"
     log.info("Using search API host: ${searchApiHost}")
 
@@ -32,6 +34,10 @@ fun Route.feed(searchApiHost: String, httpClient: HttpClient) {
         val subject = call.principal<JWTPrincipal>()?.payload?.subject ?: "?"
         withLoggingContext("U" to subject) {
             log.debug { "Auth subject: ${subject}" }
+
+            searchMeter.searchPerformed(
+                    client = subject.substringAfter("@"),
+                    searchParameterTypes = *call.parameters.names().toTypedArray())
 
             val elasticRequest = ElasticRequestBuilder(call.parameters["size"], call.parameters["page"])
                     .updated(call.parameters["updated"])
