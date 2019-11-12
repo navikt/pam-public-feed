@@ -5,7 +5,9 @@ import java.time.ZonedDateTime
 
 data class SearchResponseRoot(val hits: Hits)
 
-data class Hits(val total: Int, val hits: ArrayList<Hit>)
+data class Hits(val total: Total, val hits: ArrayList<Hit>)
+
+data class Total(val value: Int)
 
 data class Hit(@JsonProperty("_source") val source: Source)
 
