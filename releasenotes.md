@@ -1,3 +1,6 @@
+## RELEASE - 0.23.106-a42d075
+#### New in this release: 
++ 2019-11-12 [ES 7.2] fix total hits incompatible
 ## RELEASE - 0.16.86-f196b8e
 #### New in this release: 
 + 2019-06-25 [Feature] Allow range filtering on published date/time
