@@ -9,7 +9,7 @@ class DateFilterTest {
 
     @Test
     fun valueParam() {
-        val p = "val".parseAsValueFilter("foo", false)
+        val p = "val".parseAsValueFilter("foo")
         assertThat(p).isNotNull()
         assertThat(p?.isNegated).isFalse()
         assertThat(p?.name).isEqualTo("foo")
@@ -19,14 +19,14 @@ class DateFilterTest {
 
     @Test
     fun valueParamTrim() {
-        val p = "val".parseAsValueFilter("foo", true)
+        val p = "val".parseAsValueFilter("foo")
         assertThat(p).isNotNull()
         assertThat(p?.value()).isEqualTo("val")
     }
 
     @Test
     fun negatedValueParam() {
-        val p = "!val".parseAsValueFilter("foo", false)
+        val p = "!val".parseAsValueFilter("foo")
         assertThat(p).isNotNull()
         assertThat(p?.isNegated).isTrue()
         assertThat(p?.value()).isEqualTo("val")
@@ -34,18 +34,10 @@ class DateFilterTest {
 
     @Test
     fun multiValueParam() {
-        val p = "0 bad, 1 ok,2 very good ".parseAsValueFilter("foo", true)
+        val p = "0 bad, 1 ok,2 very good ".parseAsValueFilter("foo")
         assertThat(p).isNotNull()
         assertThat(p?.isNegated).isFalse()
         assertThat<String>(p?.values()).containsExactly("0 bad", "1 ok", "2 very good")
-    }
-
-    @Test
-    fun multiValueParamNegatedNoTrim() {
-        val p = "!0 bad, 1 ok,2 very good ".parseAsValueFilter("foo", false)
-        assertThat(p).isNotNull()
-        assertThat(p?.isNegated).isTrue()
-        assertThat<String>(p?.values()).containsExactly("0 bad", " 1 ok", "2 very good ")
     }
 
     @Test
