@@ -56,7 +56,7 @@ class ApiTest {
             }
         }
 
-        val randomPort = ServerSocket(0).use { it.localPort }
+        private val randomPort = ServerSocket(0).use { it.localPort }
         val webapp = searchApi(randomPort, { mockSearchApiClient },
                 Environment(searchApiHost = "http://mocked-service", auth = AuthConfig(secret = "test-secret")))
         val appUrl = "http://localhost:${randomPort}"

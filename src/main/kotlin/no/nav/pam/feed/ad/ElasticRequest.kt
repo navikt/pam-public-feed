@@ -16,8 +16,10 @@ class ElasticRequest(
         val locationValueFilters: List<ValueParam> = listOf(),
         val dateFilters: List<DateParam> = listOf()) {
 
-    private val defaultValue: ValueParam = "ACTIVE".parseAsValueFilter("status", true)!!
-    private val valueFilters = valueFilters + defaultValue
+    private val onlyActiveFilter: ValueParam = "ACTIVE".parseAsValueFilter("status")!!
+    private val notFinnFilter: ValueParam = "!FINN".parseAsValueFilter("source")!!
+
+    private val valueFilters = valueFilters + onlyActiveFilter + notFinnFilter
 
     fun asJson(): String {
 
@@ -39,7 +41,7 @@ class ElasticRequest(
     private val valueQueries = this.valueFilters.filter { !it.isNegated }.flatMap { it.toTermQueries() }
     private val dateQueries = dateFilters.map { it.toRangeQuery() }
     private val filterQueries = dateQueries + valueQueries + LocationQuery(locationValueFilters).filter()
-    private val mustNotQueries = valueFilters.filter { it.isNegated }.flatMap { it.toTermQueries() }
+    private val mustNotQueries = this.valueFilters.filter { it.isNegated }.flatMap { it.toTermQueries() }
 
 }
 

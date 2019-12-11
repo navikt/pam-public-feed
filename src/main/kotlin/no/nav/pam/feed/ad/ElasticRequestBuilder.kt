@@ -22,15 +22,15 @@ class ElasticRequestBuilder(
         this.currentPage = (currentPage?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.pageSize)
     }
 
-    internal fun municipal(municipal: String?) = apply { this.municipal =  municipal?.parseAsLocationValueFilter("municipal", true) }
+    internal fun municipal(municipal: String?) = apply { this.municipal =  municipal?.parseAsLocationValueFilter("municipal") }
 
-    internal fun county(county: String?) = apply { this.county = county?.parseAsLocationValueFilter("county", true) }
+    internal fun county(county: String?) = apply { this.county = county?.parseAsLocationValueFilter("county") }
 
-    internal fun uuid(uuid: String?) = apply { this.uuid = uuid?.parseAsValueFilter("uuid", true) }
+    internal fun uuid(uuid: String?) = apply { this.uuid = uuid?.parseAsValueFilter("uuid") }
 
-    internal fun source(source: String?) = apply { this.source = source?.parseAsValueFilter("source", true) }
+    internal fun source(source: String?) = apply { this.source = source?.parseAsValueFilter("source") }
 
-    internal fun orgnr(orgnr: String?) = apply { this.orgnr = orgnr?.parseAsValueFilter("orgnr", true ) }
+    internal fun orgnr(orgnr: String?) = apply { this.orgnr = orgnr?.parseAsValueFilter("orgnr" ) }
 
     internal fun updated(updated: String?) = apply { this.updated = updated?.parseAsDateFilter("updated", true) }
 
