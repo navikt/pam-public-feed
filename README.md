@@ -1,13 +1,12 @@
 # NAV job ads public API
 
 ## Background
-As a public agency responsible for getting people into work, NAV keeps a job ads 
+As a public agency responsible for getting people into work, NAV keeps a job ads
 database of open positions in Norway. As a public actor, NAV is also required to
 publish available data to other actors.
 
-Publishing data about available jobs for the Norwegian population and employers 
-is found in this API 
-
+Publishing data about available jobs for the Norwegian population and employers
+is found in this API
 
 ## Authentication
 
@@ -16,7 +15,7 @@ The feed API requires authentication using the `Authorization` header, type
 
 There are two types of tokens, public and private. The public token may be revoked
 at any time and replaced by another one. If the consumer needs a more stable token
-one can be ordered by mailing a request for a token to 
+one can be ordered by mailing a request for a token to
 plattform.for.arbeidsmarkedet@nav.no. Please include your name or the company name
 in the request.
 
@@ -26,7 +25,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwdWJsaWMudG9rZW4udjFAbmF2Lm5vIiw
 ```
 
 ## Request and responses
-Requests and responses are documented with 
+Requests and responses are documented with
 [swagger](https://arbeidsplassen.nav.no/public-feed/swagger/). When testing with
 swagger feel free to use the token above.
 
@@ -61,19 +60,19 @@ If you need to get all currently active ads, there are a few options:
    of the last ad). This way, you get the next 5000, which will all be older
    than the ads in the first batch. Continue going back in time until you get no
    more hits. Then you will have fetched all currently active ads.
-   
+
    As an example, if the oldest ad of the first fetch (without any filtering
    criteria) has a published date of 2019-06-01T00:30:00, then for the next fetch, the
    following filter criteria could be used:
-   
+
        /public-feed/api/v1/ads?published=[*,2019-06-01T00:30:00)
-       
+
    And so on.
-   
+
    Also, it is important to realize that this method assumes that you page
    through all available ads until none are left, everytime the published filter
    criterium is adjusted.
-   
+
 2. Consume the feed regularly (with full page-through) and store all ads in your
    own solutions. You will get all the new ads since the last time the feed was
    fetched. You can always rely on the UUID field to determine if an ad is new
