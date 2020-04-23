@@ -6,24 +6,31 @@ metadata:
   labels:
     team: teampam
 spec:
-  image: repo.adeo.no:5443/pam-public-feed
+  image: {{ image }}
   port: 9021
+  liveness:
+    path: /public-feed/internal/isAlive
+    initialDelay: 10
+  readiness:
+    path: /public-feed/internal/isReady
+    initialDelay: 10
   replicas:
     min: 2
     max: 4
-    cpuThresholdPercentage: 50
-  liveness:
-    initialDelay: 10
-    path: /public-feed/internal/isAlive
-  readiness:
-    initialDelay: 10
-    path: /public-feed/internal/isReady
+  cpuThresholdPercentage: 50
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  vault:
+    enabled: true
+  webproxy: true
   prometheus:
     enabled: true
     path: /public-feed/internal/prometheus
-  webproxy: true
-  vault:
-    enabled: true
   ingresses:
     - https://pam-public-feed.nais.oera.no
     - https://arbeidsplassen.nav.no/public-feed

@@ -1,0 +1,83 @@
+name: build-deploy-dev
+on:
+  push:
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "LICENCE"
+      - "CODEOWNERS"
+    branches:
+      - master
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: build and test
+        run: mvn clean install
+      - name: versions and tag
+        run: |
+          APPLICATION=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
+          VERSION_TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+          BUILD=$(expr $GITHUB_RUN_NUMBER % 1000)
+          DOCKER_TAG=$VERSION_TAG.$BUILD-$(echo $GITHUB_SHA | cut -c1-7)
+          echo "::set-env name=DOCKER_TAG::$DOCKER_TAG"
+          echo "::set-env name=APPLICATION::$APPLICATION"
+      - name: build docker image
+        run: |
+          DOCKER_IMAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/$APPLICATION
+          IMAGE=$DOCKER_IMAGE:$DOCKER_TAG
+          docker build . --pull -t $IMAGE
+          echo "::set-env name=IMAGE::$IMAGE"
+      - name: push docker image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin docker.pkg.github.com
+          docker push $IMAGE
+      - name: deploy to dev-sbs
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-sbs
+          RESOURCE: naiserator.yml
+          VARS: naiserator-dev.json
+      - name: create and push tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote set-url origin "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git tag -f $DOCKER_TAG
+          git push -f --tags
+      - name: create changelog
+        uses: navikt/pam-generate-release-action@v1.3
+        with:
+          useLatestReleaseTag: true
+          token:  ${{ secrets.GITHUB_TOKEN }}
+          cmd: "--header-label   --exclude-labels 'status: stale,closed: notabug,closed: duplicate,closed: question,closed: invalid,closed: won't fix' --usernames-as-github-logins"
+      - name: prepare change log
+        run: |
+          CHANGELOG=$(cat CHANGELOG.md)
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          echo "::set-env name=CHANGE_LOG::$CHANGELOG"
+      - name: draft release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: ${{ env.DOCKER_TAG }}
+          release_name: ${{ env.APPLICATION }} ${{ env.DOCKER_TAG }}
+          body: ${{ env.CHANGE_LOG }}
+          draft: true
+          prerelease: false

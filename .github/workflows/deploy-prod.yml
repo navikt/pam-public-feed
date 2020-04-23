@@ -1,0 +1,26 @@
+name: deploy-prod
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: get release tag
+        env:
+          DOCKER_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          APPLICATION=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
+          DOCKER_IMAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/$APPLICATION
+          IMAGE=$DOCKER_IMAGE:$DOCKER_TAG
+          echo "::set-env name=IMAGE::$IMAGE"
+          echo $IMAGE
+      - uses: nais/deploy/actions/deploy@v1
+        name: deploy to prod-sbs
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-sbs
+          RESOURCE: naiserator.yml
+          VARS: naiserator-prod.json
