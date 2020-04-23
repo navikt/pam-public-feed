@@ -7,7 +7,7 @@ on:
       - "LICENCE"
       - "CODEOWNERS"
     branches:
-      - master
+      - GithubWorkflow
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
