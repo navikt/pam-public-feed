@@ -5,7 +5,7 @@
 
     <groupId>no.nav.pam</groupId>
     <artifactId>pam-public-feed</artifactId>
-    <version>0.25-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
