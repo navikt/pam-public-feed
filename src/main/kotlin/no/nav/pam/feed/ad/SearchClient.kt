@@ -73,4 +73,4 @@ fun StatusPages.Configuration.feed() {
 }
 
 private val Parameters.size get() = (this["size"]?.toInt() ?: 20).coerceIn(1 .. 100 )
-private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 .. MAX_TOTAL_HITS / this.size)
+private val Parameters.page get() = (this["page"]?.toInt() ?: 0).coerceIn(0 until MAX_TOTAL_HITS / this.size)
