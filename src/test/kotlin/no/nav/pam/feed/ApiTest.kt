@@ -58,7 +58,13 @@ class ApiTest {
 
         private val randomPort = ServerSocket(0).use { it.localPort }
         val webapp = searchApi(randomPort, { mockSearchApiClient },
-                Environment(searchApiHost = "http://mocked-service", auth = AuthConfig(secret = "test-secret")))
+                Environment(searchApiHost = "http://mocked-service",
+                        auth = AuthConfig(secret = "test-secret",
+                        blacklistJson = """
+                            {
+                                "foo@bar.no": 0
+                            }
+                        """)))
         val appUrl = "http://localhost:${randomPort}"
 
         @BeforeAll
@@ -132,6 +138,17 @@ class ApiTest {
                 header("Authorization", "Bearer ${badTokenValue}")
             }
         }.also { assertEquals(401, it.status.value) }
+    }
+
+    @Test
+    fun testFeedWithBlacklistedApiToken() {
+        val tokenValue = obtainApiTokenValue("foo@bar.no")
+
+        runBlocking {
+            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
+                header("Authorization", "Bearer ${tokenValue}")
+            }
+        }.also { assertEquals(401, it.status.value)}
     }
 
     @Test

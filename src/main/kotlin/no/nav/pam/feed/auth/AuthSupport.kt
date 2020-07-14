@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTDecodeException
+import com.auth0.jwt.interfaces.Payload
 import io.ktor.application.call
 import io.ktor.auth.parseAuthorizationHeader
 import io.ktor.http.HttpStatusCode
@@ -45,6 +46,13 @@ class JwtTokenFactory(private val issuer: String, private val audience: String, 
                     .withExpiresAt(expires)
                     .sign(algorithm)
 
+}
+
+class BlacklistVerifier(private val blacklist: Map<String, Long>) {
+    fun isBlacklisted(jwt: Payload): Boolean {
+        return (blacklist[jwt.subject] == 0L ||
+                blacklist[jwt.subject] == jwt.issuedAt.time)
+    }
 }
 
 private fun parseDateOptionallyTime(d: String): LocalDateTime? {
