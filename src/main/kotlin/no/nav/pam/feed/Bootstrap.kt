@@ -42,7 +42,7 @@ import io.prometheus.client.CollectorRegistry
 import mu.KotlinLogging
 import no.nav.pam.feed.Bootstrap.start
 import no.nav.pam.feed.ad.feed
-import no.nav.pam.feed.auth.BlacklistVerifier
+import no.nav.pam.feed.auth.DenylistVerifier
 import no.nav.pam.feed.auth.JwtTokenFactory
 import no.nav.pam.feed.auth.tokenManagementApi
 import no.nav.pam.feed.platform.naisApi
@@ -67,8 +67,8 @@ fun searchApi(
         clientFactory: () -> HttpClient = defaultClientFactory,
         environment: Environment = Environment()
 ): ApplicationEngine {
-    val blacklist: Map<String, Long> = jacksonObjectMapper().readValue(environment.auth.blacklistJson, object: TypeReference<Map<String, Long>>(){})
-    val blacklistVerifier = BlacklistVerifier(blacklist)
+    val denylist: Map<String, Long> = jacksonObjectMapper().readValue(environment.auth.denylistJson, object: TypeReference<Map<String, Long>>(){})
+    val denylistVerifier = DenylistVerifier(denylist)
     val tokenFactory = JwtTokenFactory(environment.auth.issuer, environment.auth.audience, environment.auth.secret)
     if (environment.auth.optional) {
         log.warn("API authentication requirement disabled")
@@ -104,7 +104,7 @@ fun searchApi(
                 validate { credential ->
                     credential.payload.subject.substringAfterLast("@")
                     return@validate if (credential.payload.audience.contains(environment.auth.audience)
-                            && !blacklistVerifier.isBlacklisted(credential.payload))
+                            && !denylistVerifier.isDenied(credential.payload))
                         JWTPrincipal(credential.payload)
                     else
                         null

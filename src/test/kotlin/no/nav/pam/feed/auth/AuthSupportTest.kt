@@ -10,25 +10,25 @@ class AuthSupportTest {
     }
 
     @Test
-    fun testBlackList() {
+    fun testDenyList() {
         val om = jacksonObjectMapper()
         val json = """
       {
         "test@foo.bar": 0,
         "test@foo.baz": 1579513544000
       }"""
-        val blacklist: Map<String, Long> = om.readValue(json, object: TypeReference<Map<String, Long>>(){})
+        val denylist: Map<String, Long> = om.readValue(json, object: TypeReference<Map<String, Long>>(){})
 
         val factory = jwtTokenFactory()
         val hmacVerifier = factory.newHmacJwtVerifier()
-        val blacklistVerifier = BlacklistVerifier(blacklist)
+        val denylistVerifier = DenylistVerifier(denylist)
 
         val fooBarToken = factory.newTokenFor("test@foo.bar")
         val decodedFooBar = hmacVerifier.verify(fooBarToken)
-        assert(blacklistVerifier.isBlacklisted(decodedFooBar))
+        assert(denylistVerifier.isDenied(decodedFooBar))
 
         val fooBazToken = factory.newTokenFor("test@foo.baz")
         val decodedFooBaz = hmacVerifier.verify(fooBazToken)
-        assert(!blacklistVerifier.isBlacklisted(decodedFooBaz))
+        assert(!denylistVerifier.isDenied(decodedFooBaz))
     }
 }

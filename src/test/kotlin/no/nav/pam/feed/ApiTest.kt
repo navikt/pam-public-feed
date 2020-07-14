@@ -60,7 +60,7 @@ class ApiTest {
         val webapp = searchApi(randomPort, { mockSearchApiClient },
                 Environment(searchApiHost = "http://mocked-service",
                         auth = AuthConfig(secret = "test-secret",
-                        blacklistJson = """
+                        denylistJson = """
                             {
                                 "foo@bar.no": 0
                             }
@@ -141,7 +141,7 @@ class ApiTest {
     }
 
     @Test
-    fun testFeedWithBlacklistedApiToken() {
+    fun testFeedWithRevokedApiToken() {
         val tokenValue = obtainApiTokenValue("foo@bar.no")
 
         runBlocking {

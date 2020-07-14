@@ -6,7 +6,7 @@ data class AuthConfig (
         val audience: String = "feed-api-v1",
         val contact: String = "support@arbeidsplassen.nav.no",
         val secret: String = getEnvVar("AUTH_SECRET"),
-        val blacklistJson: String = getEnvVar("BLACKLIST_JSON", "{}")
+        val denylistJson: String = getEnvVar("DENYLIST_JSON", "{}")
 )
 
 data class Environment (

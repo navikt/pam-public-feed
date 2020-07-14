@@ -48,10 +48,10 @@ class JwtTokenFactory(private val issuer: String, private val audience: String, 
 
 }
 
-class BlacklistVerifier(private val blacklist: Map<String, Long>) {
-    fun isBlacklisted(jwt: Payload): Boolean {
-        return (blacklist[jwt.subject] == 0L ||
-                blacklist[jwt.subject] == jwt.issuedAt.time)
+class DenylistVerifier(private val denylist: Map<String, Long>) {
+    fun isDenied(jwt: Payload): Boolean {
+        return (denylist[jwt.subject] == 0L ||
+                denylist[jwt.subject] == jwt.issuedAt.time)
     }
 }
 
