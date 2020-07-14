@@ -32,5 +32,6 @@ spec:
     enabled: true
     path: /public-feed/internal/prometheus
   ingresses:
-    - https://pam-public-feed.nais.oera.no
-    - https://arbeidsplassen.nav.no/public-feed
+  {{#each ingress as |url|}}
+     - {{url}}
+  {{/each}}
