@@ -2,10 +2,12 @@ package no.nav.pam.feed
 
 import apiDoc
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
@@ -40,6 +42,7 @@ import io.prometheus.client.CollectorRegistry
 import mu.KotlinLogging
 import no.nav.pam.feed.Bootstrap.start
 import no.nav.pam.feed.ad.feed
+import no.nav.pam.feed.auth.DenylistVerifier
 import no.nav.pam.feed.auth.JwtTokenFactory
 import no.nav.pam.feed.auth.tokenManagementApi
 import no.nav.pam.feed.platform.naisApi
@@ -64,7 +67,8 @@ fun searchApi(
         clientFactory: () -> HttpClient = defaultClientFactory,
         environment: Environment = Environment()
 ): ApplicationEngine {
-
+    val denylist: Map<String, Long> = jacksonObjectMapper().readValue(environment.auth.denylistJson, object: TypeReference<Map<String, Long>>(){})
+    val denylistVerifier = DenylistVerifier(denylist)
     val tokenFactory = JwtTokenFactory(environment.auth.issuer, environment.auth.audience, environment.auth.secret)
     if (environment.auth.optional) {
         log.warn("API authentication requirement disabled")
@@ -99,7 +103,8 @@ fun searchApi(
                 this.realm = "${environment.auth.audience}, contact ${environment.auth.contact} for access"
                 validate { credential ->
                     credential.payload.subject.substringAfterLast("@")
-                    return@validate if (credential.payload.audience.contains(environment.auth.audience))
+                    return@validate if (credential.payload.audience.contains(environment.auth.audience)
+                            && !denylistVerifier.isDenied(credential.payload))
                         JWTPrincipal(credential.payload)
                     else
                         null

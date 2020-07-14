@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTDecodeException
+import com.auth0.jwt.interfaces.Payload
 import io.ktor.application.call
 import io.ktor.auth.parseAuthorizationHeader
 import io.ktor.http.HttpStatusCode
@@ -45,6 +46,13 @@ class JwtTokenFactory(private val issuer: String, private val audience: String, 
                     .withExpiresAt(expires)
                     .sign(algorithm)
 
+}
+
+class DenylistVerifier(private val denylist: Map<String, Long>) {
+    fun isDenied(jwt: Payload): Boolean {
+        return (denylist[jwt.subject] == 0L ||
+                denylist[jwt.subject] == jwt.issuedAt.time)
+    }
 }
 
 private fun parseDateOptionallyTime(d: String): LocalDateTime? {
