@@ -32,6 +32,9 @@ spec:
   {{#each ingress as |url|}}
      - {{url}}
   {{/each}}
+  filesFrom:
+    - secret: pam-public-feed-env-secret
+      mountPath: /var/run/secrets/nais.io/vault
   accessPolicy:
     outbound:
       rules:
