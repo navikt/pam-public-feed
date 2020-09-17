@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
   name: pam-public-feed
-  namespace: default
+  namespace: teampam
   labels:
     team: teampam
 spec:
@@ -15,8 +15,8 @@ spec:
     path: /public-feed/internal/isReady
     initialDelay: 10
   replicas:
-    min: 2
-    max: 4
+    min: 1
+    max: 1
   cpuThresholdPercentage: 50
   resources:
     limits:
@@ -25,9 +25,6 @@ spec:
     requests:
       cpu: 200m
       memory: 256Mi
-  vault:
-    enabled: true
-  webproxy: true
   prometheus:
     enabled: true
     path: /public-feed/internal/prometheus
@@ -35,3 +32,7 @@ spec:
   {{#each ingress as |url|}}
      - {{url}}
   {{/each}}
+  accessPolicy:
+    outbound:
+      rules:
+        - application: pam-search-api

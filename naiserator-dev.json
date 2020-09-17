@@ -1,3 +1,3 @@
 {
-  "ingress": ["https://pam-public-feed.nais.oera-q.local", "https://arbeidsplassen-q.nav.no/public-feed"]
+  "ingress": ["https://pam-public-feed.dev-gcp.nais.io", "https://arbeidsplassen.dev.nav.no/public-feed"]
 }

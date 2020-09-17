@@ -17,10 +17,10 @@ jobs:
           echo "::set-env name=IMAGE::$IMAGE"
           echo $IMAGE
       - uses: nais/deploy/actions/deploy@v1
-        name: deploy to prod-sbs
+        name: deploy to prod-gcp
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-sbs
+          CLUSTER: prod-gcp
           RESOURCE: naiserator.yml
           VARS: naiserator-prod.json
       - name: post-production
