@@ -7,7 +7,7 @@ on:
       - "LICENCE"
       - "CODEOWNERS"
     branches:
-      - gcp
+      - master
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -42,17 +42,17 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: naiserator.yml
           VARS: naiserator-dev.json
-#      - name: post-deploy
-#        uses: navikt/pam-deploy/actions/post-deploy@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: draft release
-#        uses: actions/create-release@latest
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-#        with:
-#          tag_name: ${{ env.VERSION_TAG }}
-#          release_name: ${{ env.APPLICATION }} ${{ env.VERSION_TAG }}
-#          body: ${{ env.CHANGE_LOG }}
-#          draft: true
-#          prerelease: false
+      - name: post-deploy
+        uses: navikt/pam-deploy/actions/post-deploy@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: draft release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION_TAG }}
+          release_name: ${{ env.APPLICATION }} ${{ env.VERSION_TAG }}
+          body: ${{ env.CHANGE_LOG }}
+          draft: true
+          prerelease: false
