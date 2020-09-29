@@ -10,7 +10,7 @@ data class AuthConfig (
 )
 
 data class Environment (
-        val searchApiHost: String = "http://pam-search-api.default",
+        val searchApiHost: String = "http://pam-search-api",
         val contextPath: String = "/public-feed",
         val indentJson: Boolean = false,
         val auth: AuthConfig = AuthConfig()

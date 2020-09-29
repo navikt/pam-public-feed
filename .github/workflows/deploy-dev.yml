@@ -35,11 +35,11 @@ jobs:
           docker build . --pull -t $IMAGE
           echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin docker.pkg.github.com
           docker push $IMAGE
-      - name: deploy to dev-sbs
+      - name: deploy to dev-gcp
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-sbs
+          CLUSTER: dev-gcp
           RESOURCE: naiserator.yml
           VARS: naiserator-dev.json
       - name: post-deploy
