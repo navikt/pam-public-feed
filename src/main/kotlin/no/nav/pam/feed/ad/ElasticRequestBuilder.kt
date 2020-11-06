@@ -42,7 +42,8 @@ class ElasticRequestBuilder(
     internal fun build() = ElasticRequest(
             pageSize = pageSize,
             currentPage = currentPage,
-            valueFilters = listOfNotNull(uuid, source, orgnr, category),
+            valueFilters = listOfNotNull(uuid, source, orgnr),
+            matchFilters = listOfNotNull(category),
             locationValueFilters = listOfNotNull(municipal, county),
             dateFilters = listOfNotNull(updated, published))
 

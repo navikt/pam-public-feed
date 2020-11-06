@@ -101,7 +101,7 @@ class ApiIntegrationTest {
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
 
         assertThat(elasticJson.query("/query/bool/filter/0/term/source/value")).isEqualTo("Stillingsregistrering")
-        assertThat(elasticJson.query("/query/bool/filter/1/term/category_no/value")).isEqualTo("Utdanning")
+        assertThat(elasticJson.query("/query/bool/filter/2/match/category_no/query")).isEqualTo("Utdanning")
     }
 
     @Test
