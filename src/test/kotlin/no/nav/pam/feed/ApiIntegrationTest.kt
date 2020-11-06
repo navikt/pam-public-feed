@@ -96,6 +96,15 @@ class ApiIntegrationTest {
     }
 
     @Test
+    fun `that elastic query with multiple params is wellformed`() {
+        runBlocking { `call with parameters`("category=Utdanning&source=Stillingsregistrering") }
+        val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
+
+        assertThat(elasticJson.query("/query/bool/filter/0/term/source/value")).isEqualTo("Stillingsregistrering")
+        assertThat(elasticJson.query("/query/bool/filter/1/term/category_no/value")).isEqualTo("Utdanning")
+    }
+
+    @Test
     fun `that elastic query with single excluded source is wellformed`() {
         runBlocking { `call with parameters`("source=!Stillingsregistrering") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
