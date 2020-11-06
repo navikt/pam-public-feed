@@ -47,8 +47,7 @@ fun Route.feed(
                     .orgnr(call.parameters["orgnr"])
                     .municipal(call.parameters["municipal"])
                     .county(call.parameters["county"])
-                    .occupationLevel1(call.parameters["occupationLevel1"])
-                    .occupationLevel2(call.parameters["occupationLevel2"])
+                    .category(call.parameters["category"])
                     .build()
 
             val elasticRequestAsJson = elasticRequest.asJson()
