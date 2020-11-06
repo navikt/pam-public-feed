@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: "NAV ads public API"
-  description: "Published data about available jobs for the Norwegian population and employers ares found in this API."
+  description: "This API provides published data about available jobs in Norway and information on employers\n For more documentation and the public API-key, please visit our Github page [PAM Public Feed](https://github.com/navikt/pam-public-feed/)"
   termsOfService: "https://datanorge.no"
   contact:
     email: "plattform.for.arbeidsmarkedet@nav.no"
