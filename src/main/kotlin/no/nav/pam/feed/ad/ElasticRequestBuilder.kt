@@ -12,7 +12,8 @@ class ElasticRequestBuilder(
     private var published: DateParam? = null
 
     private var uuid: ValueParam? = null
-    private var category: ValueParam? = null
+    private var occupationLevel1: ValueParam? = null
+    private var occupationLevel2: ValueParam? = null
     private var source: ValueParam? = null
     private var orgnr: ValueParam? = null
 
@@ -29,7 +30,8 @@ class ElasticRequestBuilder(
 
     internal fun uuid(uuid: String?) = apply { this.uuid = uuid?.parseAsValueFilter("uuid") }
 
-    internal fun category(category: String?) = apply { this.category = category?.parseAsValueFilter("categoryList.name") }
+    internal fun occupationLevel1(occupationLevel1: String?) = apply { this.occupationLevel1 = occupationLevel1?.parseAsValueFilter("occupationList.level1") }
+    internal fun occupationLevel2(occupationLevel2: String?) = apply { this.occupationLevel2 = occupationLevel2?.parseAsValueFilter("occupationList.level2") }
 
     internal fun source(source: String?) = apply { this.source = source?.parseAsValueFilter("source") }
 

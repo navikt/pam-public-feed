@@ -75,11 +75,19 @@ paths:
           required: false
           schema:
             type: "string"
-        - name: "category"
+        - name: "occupationLevel1"
           in: "query"
           description: |
-            Only fetch ads for jobs with the given category, or not from the given category if prefixed with "!".
-            Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
+            Only fetch ads for jobs with the given occupation level 1 category, or not from the given category if prefixed with "!".
+            Example: "Utdanning". Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
+          required: false
+          schema:
+            type: "string"
+        - name: "occupationLevel2"
+          in: "query"
+          description: |
+            Only fetch ads for jobs with the given occupation level 2 category, or not from the given category if prefixed with "!".
+            Example: "UtdanningLedere av undervisning og utdanning". Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
           required: false
           schema:
             type: "string"
