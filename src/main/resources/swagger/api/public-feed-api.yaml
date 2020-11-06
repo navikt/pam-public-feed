@@ -75,6 +75,14 @@ paths:
           required: false
           schema:
             type: "string"
+        - name: "category"
+          in: "query"
+          description: |
+            Only fetch ads for jobs with the given category, or not from the given category if prefixed with "!".
+            Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
+          required: false
+          schema:
+            type: "string"
         - name: "municipal"
           in: "query"
           description: "Only fetch ads from the given municipality, e.g. TRONDHEIM."

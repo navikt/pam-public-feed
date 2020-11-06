@@ -12,6 +12,7 @@ class ElasticRequestBuilder(
     private var published: DateParam? = null
 
     private var uuid: ValueParam? = null
+    private var category: ValueParam? = null
     private var source: ValueParam? = null
     private var orgnr: ValueParam? = null
 
@@ -27,6 +28,8 @@ class ElasticRequestBuilder(
     internal fun county(county: String?) = apply { this.county = county?.parseAsLocationValueFilter("county") }
 
     internal fun uuid(uuid: String?) = apply { this.uuid = uuid?.parseAsValueFilter("uuid") }
+
+    internal fun category(category: String?) = apply { this.category = category?.parseAsValueFilter("categoryList.name") }
 
     internal fun source(source: String?) = apply { this.source = source?.parseAsValueFilter("source") }
 
