@@ -7,7 +7,7 @@ on:
       - "LICENCE"
       - "CODEOWNERS"
     branches:
-      - Issue_47
+      - master
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
