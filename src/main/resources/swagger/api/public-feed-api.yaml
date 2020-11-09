@@ -79,7 +79,7 @@ paths:
           in: "query"
           description: |
             Only fetch ads for jobs with the given occupation level 1 or level 2 category.
-            Example: "UtdanningLedere av undervisning og utdanning" or "Utdanning". Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
+            Example: "Ledere av undervisning og utdanning". Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
           required: false
           schema:
             type: "string"
