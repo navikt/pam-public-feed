@@ -23,6 +23,7 @@ data class FeedAd(
         val description: String?,
         val sourceurl: String?,
         val source: String?,
+        val applicationUrl: String?,
         val applicationDue: String?,
         val occupationCategories: List<FeedOccupation>,
         val jobtitle: String?,
