@@ -85,6 +85,7 @@ private val sourceIncludes = arrayOf(
         "properties.adtext",
         "properties.sourceurl",
         "properties.applicationdue",
+        "properties.applicationurl",
         "properties.employer",
         "properties.employerdescription",
         "properties.employerhomepage",
