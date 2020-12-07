@@ -49,6 +49,7 @@ class SerializationTest {
         assertNotNull(feedAd)
         assertEquals("Ulvik herad", feedAd.employer.name)
         assertEquals("https://www.ulvik.kommune.no/", feedAd.employer.homepage)
+        assertEquals("https://www.ulvik.kommune.no/?apply", feedAd.applicationUrl)
         assertEquals("979821506", feedAd.employer.orgnr)
         assertEquals(1, feedAd.workLocations.size)
         assertEquals("HORDALAND", feedAd.workLocations[0].county)
