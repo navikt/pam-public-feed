@@ -21,6 +21,7 @@ fun mapAd(source: Source, host: String?): FeedAd {
             description = source.properties["adtext"],
             sourceurl = source.properties["sourceurl"],
             source = source.source,
+            applicationUrl = source.properties["applicationurl"],
             applicationDue = source.properties["applicationdue"],
             occupationCategories = source.occupationList.map { FeedOccupation(it.level1, it.level2) },
             jobtitle = source.properties["jobtitle"],

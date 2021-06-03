@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: "NAV ads public API"
-  description: "Published data about available jobs for the Norwegian population and employers ares found in this API."
+  description: "This API provides published data about available jobs in Norway and information on employers\n For more documentation and the public API-key, please visit our Github page [PAM Public Feed](https://github.com/navikt/pam-public-feed/)"
   termsOfService: "https://datanorge.no"
   contact:
     email: "plattform.for.arbeidsmarkedet@nav.no"
@@ -72,6 +72,14 @@ paths:
             Only fetch ads from the organisation with the given orgnr, or not from the given orgnr if prefixed with "!".
             "987654321" will only fetch ads from the organisation with orgnr 987654321, while "!987654321" will
             fetch ads from all organisations exception 987654321.
+          required: false
+          schema:
+            type: "string"
+        - name: "category"
+          in: "query"
+          description: |
+            Only fetch ads for jobs with the given occupation level 1 or level 2 category.
+            Example: "Ledere av undervisning og utdanning". Valid categories can be found here: https://arbeidsplassen-api.nav.no/stillingsimport/api/v1/categories/pyrk/occupations.
           required: false
           schema:
             type: "string"

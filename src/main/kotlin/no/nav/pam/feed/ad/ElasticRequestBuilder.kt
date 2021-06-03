@@ -12,6 +12,7 @@ class ElasticRequestBuilder(
     private var published: DateParam? = null
 
     private var uuid: ValueParam? = null
+    private var category: ValueParam? = null
     private var source: ValueParam? = null
     private var orgnr: ValueParam? = null
 
@@ -28,6 +29,8 @@ class ElasticRequestBuilder(
 
     internal fun uuid(uuid: String?) = apply { this.uuid = uuid?.parseAsValueFilter("uuid") }
 
+    internal fun category(category: String?) = apply { this.category = category?.parseAsValueFilter("category_no") }
+
     internal fun source(source: String?) = apply { this.source = source?.parseAsValueFilter("source") }
 
     internal fun orgnr(orgnr: String?) = apply { this.orgnr = orgnr?.parseAsValueFilter("orgnr" ) }
@@ -40,6 +43,7 @@ class ElasticRequestBuilder(
             pageSize = pageSize,
             currentPage = currentPage,
             valueFilters = listOfNotNull(uuid, source, orgnr),
+            matchFilters = listOfNotNull(category),
             locationValueFilters = listOfNotNull(municipal, county),
             dateFilters = listOfNotNull(updated, published))
 

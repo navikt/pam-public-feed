@@ -13,6 +13,7 @@ class ElasticRequest(
         private val pageSize: Int,
         private val currentPage: Int,
         valueFilters: List<ValueParam> = listOf(),
+        matchFilters: List<ValueParam> = listOf(),
         val locationValueFilters: List<ValueParam> = listOf(),
         val dateFilters: List<DateParam> = listOf()) {
 
@@ -40,7 +41,8 @@ class ElasticRequest(
 
     private val valueQueries = this.valueFilters.filter { !it.isNegated }.flatMap { it.toTermQueries() }
     private val dateQueries = dateFilters.map { it.toRangeQuery() }
-    private val filterQueries = dateQueries + valueQueries + LocationQuery(locationValueFilters).filter()
+    private val matchQueries = matchFilters.flatMap { it.toMatchQueries() }
+    private val filterQueries = dateQueries + valueQueries + matchQueries + LocationQuery(locationValueFilters).filter()
     private val mustNotQueries = this.valueFilters.filter { it.isNegated }.flatMap { it.toTermQueries() }
 
 }
@@ -83,6 +85,7 @@ private val sourceIncludes = arrayOf(
         "properties.adtext",
         "properties.sourceurl",
         "properties.applicationdue",
+        "properties.applicationurl",
         "properties.employer",
         "properties.employerdescription",
         "properties.employerhomepage",
@@ -97,6 +100,7 @@ private val sourceIncludes = arrayOf(
 )
 
 private fun ValueParam.toTermQueries() = values().map { QueryBuilders.termQuery(this.name, it) }
+private fun ValueParam.toMatchQueries() = values().map { QueryBuilders.matchQuery(this.name, it) }
 
 private fun DateParam.toRangeQuery(): RangeQueryBuilder {
     val range = QueryBuilders.rangeQuery(this.name)
