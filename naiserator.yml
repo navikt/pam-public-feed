@@ -15,8 +15,8 @@ spec:
     path: /public-feed/internal/isReady
     initialDelay: 10
   replicas:
-    min: 2
-    max: 2
+    min: 3
+    max: 3
   cpuThresholdPercentage: 50
   resources:
     limits:
