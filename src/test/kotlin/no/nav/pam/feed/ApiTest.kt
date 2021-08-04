@@ -292,7 +292,7 @@ class ApiTest {
         }
 
         assertEquals(100, feed.pageSize)
-        assertEquals(9, feed.pageNumber)
+        assertEquals(49, feed.pageNumber)
         assertEquals(4, feed.totalPages)
         assertEquals(332, feed.totalElements)
         assertFalse(feed.first)
