@@ -18,7 +18,7 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import java.io.IOException
 
-internal const val MAX_TOTAL_HITS = 1000
+internal const val MAX_TOTAL_HITS = 5000
 
 private val log = KotlinLogging.logger { }
 
