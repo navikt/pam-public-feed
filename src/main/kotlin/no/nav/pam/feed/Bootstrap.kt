@@ -114,8 +114,8 @@ fun searchApi(
         install(CORS) {
             allowCredentials = true
             header("Authorization")
-            anyHost()
         }
+
         install(StatusPages) {
             feed()
         }

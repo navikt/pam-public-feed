@@ -1,28 +1,28 @@
 package no.nav.pam.feed
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.response.HttpResponse
-import io.ktor.client.response.readText
-import io.ktor.http.*
-import kotlinx.coroutines.io.jvm.javaio.toByteReadChannel
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.util.cio.*
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.pam.feed.ad.FeedRoot
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.net.ServerSocket
+import java.util.concurrent.TimeUnit
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.server.engine.*
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.TimeUnit
 
 private val log = KotlinLogging.logger {}
 
@@ -116,39 +116,43 @@ class ApiTest {
     fun testFeedWithExpiredToken() {
         val expiredToken = obtainApiTokenValue(expires = "2018-01-01")
 
-        runBlocking {
+        assertThrows<ClientRequestException> { runBlocking {
             httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
                 header("Authorization", "Bearer ${expiredToken}")
+                }
             }
-        }.also { assertEquals(401, it.status.value) }
+        }
     }
 
     @Test
     fun testNoApiToken() {
-        runBlocking {
+        assertThrows<ClientRequestException> { runBlocking {
             httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads")
-        }.also { assertEquals(401, it.status.value) }
+        }}
     }
 
     @Test
     fun testFeedNoAccessWithBadToken() {
         val badTokenValue = obtainApiTokenValue().replace("A", "B")
-        runBlocking {
-            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
-                header("Authorization", "Bearer ${badTokenValue}")
+        assertThrows<ClientRequestException> {
+            runBlocking {
+                httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
+                    header("Authorization", "Bearer ${badTokenValue}")
+                }
             }
-        }.also { assertEquals(401, it.status.value) }
+        }
     }
 
     @Test
     fun testFeedWithRevokedApiToken() {
         val tokenValue = obtainApiTokenValue("foo@bar.no")
-
-        runBlocking {
-            httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
-                header("Authorization", "Bearer ${tokenValue}")
+        assertThrows<ClientRequestException> {
+            runBlocking {
+                httpClient.get<HttpResponse>(appUrl + "/public-feed/api/v1/ads") {
+                    header("Authorization", "Bearer ${tokenValue}")
+                }
             }
-        }.also { assertEquals(401, it.status.value)}
+        }
     }
 
     @Test

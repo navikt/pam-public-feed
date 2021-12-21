@@ -1,21 +1,14 @@
 package no.nav.pam.feed
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.engine.mock.toByteArray
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.response.HttpResponse
-import io.ktor.client.response.readText
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.features.json.*
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
 import io.ktor.http.fullPath
 import io.ktor.http.headersOf
-import kotlinx.coroutines.io.jvm.javaio.toByteReadChannel
+import io.ktor.util.cio.*
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.pam.feed.ad.FeedRoot
@@ -26,6 +19,10 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.net.ServerSocket
 import java.util.concurrent.TimeUnit
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
+import io.ktor.server.engine.*
 
 private val log = KotlinLogging.logger {}
 
@@ -147,7 +144,7 @@ class ApiIntegrationTest {
     private fun obtainApiTokenValue(subject: String = "test@test"): String = runBlocking {
         httpClient.submitForm<HttpResponse>(appUrl + "/public-feed/internal/newApiToken",
                 Parameters.build { append("subject", subject) })
-                .readText(Charsets.UTF_8).let { text ->
+            .readText(Charsets.UTF_8).let { text ->
                     text.lines().first { line -> line.startsWith("Authorization:") }
                             .removePrefix("Authorization: Bearer ")
                 }
