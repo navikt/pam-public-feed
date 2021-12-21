@@ -9,50 +9,12 @@ on:
     branches:
       - master
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
-        with:
-          java-version: '12.x'
-      - uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - name: build and test
-        run: mvn clean install
-      - name: pre-deploy
-        uses: navikt/pam-deploy/actions/pre-deploy@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: build and push docker image
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          docker build . --pull -t $IMAGE
-          echo "$GITHUB_TOKEN" | docker login --username "$GITHUB_REPOSITORY" --password-stdin docker.pkg.github.com
-          docker push $IMAGE
-      - name: deploy to dev-gcp
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: naiserator.yml
-          VARS: naiserator-dev.json
-      - name: post-deploy
-        uses: navikt/pam-deploy/actions/post-deploy@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: draft release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: ${{ env.VERSION_TAG }}
-          release_name: ${{ env.APPLICATION }} ${{ env.VERSION_TAG }}
-          body: ${{ env.CHANGE_LOG }}
-          draft: true
-          prerelease: false
+  call-workflow:
+    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v2
+    with:
+      JAVA_VERSION: 11
+      BUILD_CACHE: maven
+    secrets:
+      NAIS_DEPLOY_APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+

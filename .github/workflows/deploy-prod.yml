@@ -4,26 +4,7 @@ on:
     types: [published]
 
 jobs:
-  deploy-prod:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: get release tag
-        env:
-          VERSION_TAG: ${{ github.event.release.tag_name }}
-        run: |
-          APPLICATION=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
-          IMAGE=docker.pkg.github.com/$GITHUB_REPOSITORY/$APPLICATION:$VERSION_TAG
-          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
-          echo $IMAGE
-      - uses: nais/deploy/actions/deploy@v1
-        name: deploy to prod-gcp
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-gcp
-          RESOURCE: naiserator.yml
-          VARS: naiserator-prod.json
-      - name: post-production
-        uses: navikt/pam-deploy/actions/post-production@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  call-workflow:
+    uses: navikt/pam-deploy/.github/workflows/deploy-prod.yml@v2
+    secrets:
+      NAIS_DEPLOY_APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
