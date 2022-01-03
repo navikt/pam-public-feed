@@ -119,6 +119,7 @@ fun searchApi(
         install(StatusPages) {
             feed()
         }
+
         routing {
 
             route (environment.contextPath) {

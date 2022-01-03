@@ -26,7 +26,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwdWJsaWMudG9rZW4udjFAbmF2Lm5vIiw
 
 ## Request and responses
 Requests and responses are documented with
-[swagger](https://arbeidsplassen.nav.no/public-feed/swagger/). When testing with
+[swagger](https://arbeidsplassen.nav.no/public-feed/swagger/index.html). When testing with
 swagger feel free to use the token above.
 
 
