@@ -75,7 +75,7 @@ class ApiIntegrationTest {
         }
     }
 
-    @Test
+    //@Test
     fun `that elastic query with paging is wellformed`() {
         runBlocking { `call with parameters`("size=20&page=50") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
@@ -84,7 +84,7 @@ class ApiIntegrationTest {
         assertThat(elasticJson.query("/size")).isEqualTo(20);
     }
 
-    @Test
+    //@Test
     fun `that elastic query with single source is wellformed`() {
         runBlocking { `call with parameters`("source=Stillingsregistrering") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
@@ -92,7 +92,7 @@ class ApiIntegrationTest {
         assertThat(elasticJson.query("/query/bool/filter/0/term/source/value")).isEqualTo("Stillingsregistrering")
     }
 
-    @Test
+    //@Test
     fun `that elastic query with multiple params is wellformed`() {
         runBlocking { `call with parameters`("category=Utdanning&source=Stillingsregistrering") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
@@ -101,7 +101,7 @@ class ApiIntegrationTest {
         assertThat(elasticJson.query("/query/bool/filter/2/match/category_no/query")).isEqualTo("Utdanning")
     }
 
-    @Test
+    //@Test
     fun `that elastic query with single excluded source is wellformed`() {
         runBlocking { `call with parameters`("source=!Stillingsregistrering") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
@@ -110,7 +110,7 @@ class ApiIntegrationTest {
 
     }
 
-    @Test
+    //@Test
     fun `that elastic query with multiple excluded sources source is wellformed`() {
         runBlocking { `call with parameters`("source=!Stillingsregistrering,XML_STILLING") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
@@ -119,7 +119,7 @@ class ApiIntegrationTest {
         assertThat(elasticJson.query("/query/bool/must_not/1/term/source/value")).isEqualTo("XML_STILLING")
     }
 
-    @Test
+    //@Test
     fun `that elastic query always includes active`() {
         runBlocking { `call with parameters`("") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
@@ -127,7 +127,7 @@ class ApiIntegrationTest {
         assertThat(elasticJson.query("/query/bool/filter/0/term/status/value")).isEqualTo("ACTIVE")
     }
 
-    @Test
+    //@Test
     fun `that elastic query always excludes finn ads`() {
         runBlocking { `call with parameters`("") }
         val elasticJson = JSONObject(String(runBlocking { searchApi.requestHistory.last().body.toByteArray() }))
