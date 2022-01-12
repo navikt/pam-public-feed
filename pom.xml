@@ -17,7 +17,7 @@
         <coroutines.version>1.5.2</coroutines.version>
         <kotlin_loggin.version>2.1.21</kotlin_loggin.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
-        <jackson.version>2.11.1</jackson.version>
+        <jackson.version>2.12.6</jackson.version>
         <elastic-client>7.10.0</elastic-client>
         <micrometer.version>1.8.1</micrometer.version>
     </properties>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.7</version>
         </dependency>
 
         <dependency>
