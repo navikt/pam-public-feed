@@ -17,7 +17,7 @@
         <coroutines.version>1.5.2</coroutines.version>
         <kotlin_loggin.version>2.1.21</kotlin_loggin.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
-        <jackson.version>2.11.1</jackson.version>
+        <jackson.version>2.13.2</jackson.version>
         <elastic-client>7.10.0</elastic-client>
         <micrometer.version>1.8.1</micrometer.version>
     </properties>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.8.3</version>
+            <version>3.19.0</version>
         </dependency>
 
         <dependency>
