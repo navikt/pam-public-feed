@@ -5,3 +5,7 @@ ignore:
     - '*':
         reason: 'elasticsearch upgrade later'
         expires: 2025-07-08T06:14:39.494Z
+  SNYK-JAVA-COMFASTERXMLJACKSONCORE-2421244:
+    - '*':
+        reason: 'jackson is not updated yet'
+        expires: 2025-07-08T06:14:39.494Z
