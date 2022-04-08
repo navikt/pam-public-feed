@@ -121,7 +121,8 @@ paths:
                       <p>Stillingstekst</p>
                     source: "https://www.sourcelink.no/id"
                     applicationDue: "20.05.2019"
-                    occupations:
+                    applicationUrl: "https://application.url/here"
+                    occupationCategories:
                       - level1: "Helse og sosial"
                         level2: "Pyskologer og terapeuter"
                     link: "https://arbeidsplassen.nav.no/stillinger/stilling/314f2f5db4cc-c9d4-43c1-aa55-57e295194099"
@@ -236,7 +237,12 @@ components:
                 type: string
                 examples:
                   20.05.2019
-              occupations:
+              applicationUrl:
+                type: string
+                title: Link for sending applications
+                examples:
+                  https://application.url/here
+              occupationCategories:
                 type: array
                 title: List of occupation categories
                 items:
