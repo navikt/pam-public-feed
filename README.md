@@ -1,12 +1,8 @@
-# NAV job ads public API
+## Beskrivelse
 
-## Background
-As a public agency responsible for getting people into work, NAV keeps a job ads
-database of open positions in Norway. As a public actor, NAV is also required to
-publish available data to other actors.
+As a public agency responsible for getting people into work, NAV keeps a job ads database of open positions in Norway. As a public actor, NAV is also required to publish available data to other actors.
 
-Publishing data about available jobs for the Norwegian population and employers
-is found in this API
+Publishing data about available jobs for the Norwegian population and employers is found in this API
 
 ## Authentication
 
