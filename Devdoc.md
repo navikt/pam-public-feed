@@ -8,7 +8,7 @@ The API is documented with in swagger. When the API changes, please update the a
 
 1. Create the token:
 
-        curl https://pam-public-feed.nais.oera.no/public-feed/internal/newApiToken -d subject=EMAIL
+        curl https://pam-public-feed.prod-gcp.nais.io/public-feed/internal/newApiToken -d subject=EMAIL
     
     where `EMAIL` is the email address provided as customer contact information.
     
@@ -27,13 +27,13 @@ stop working after the expiry date.
 
 Call:
 
-    curl https://pam-public-feed.nais.oera.no/public-feed/internal/newApiToken -d subject=EMAIL -d expires=2020-01-01
+    curl https://pam-public-feed.prod-gcp.nais.io/public-feed/internal/newApiToken -d subject=EMAIL -d expires=2020-01-01
 
 ## Get information about an existing token
 
 Call:
 
-    curl -H 'Authorization: Bearer TOKEN' https://pam-public-feed.nais.oera.no/public-feed/internal/apiTokenInfo
+    curl -H 'Authorization: Bearer TOKEN' https://pam-public-feed.prod-gcp.nais.io/public-feed/internal/apiTokenInfo
 
 where `TOKEN` is the encoded token value. The endpoint decodes and verifies the
 token, then responds:
