@@ -88,6 +88,16 @@ class DateFilterTest {
     }
 
     @Test
+    fun dateIntervalDaysWithOffset() {
+        val dp = "[2018-01-01+02:00,2018-01-02+02:00]". parseAsDateFilter("somedate", true)
+        assertThat(dp).isNotNull()
+        assertThat(dp?.startInclusive).isTrue()
+        assertThat(dp?.endInclusive).isTrue()
+        assertThat(dp?.start(stringConverter).toString()).isEqualTo("2018-01-01+02:00")
+        assertThat(dp?.end(stringConverter).toString()).isEqualTo("2018-01-02+02:00")
+    }
+
+    @Test
     fun dateIntervalDays_startExclusive() {
         val dp = "(2018-01-01,2018-01-02]". parseAsDateFilter("somedate", true)
         assertThat(dp).isNotNull()
@@ -140,6 +150,16 @@ class DateFilterTest {
         assertThat(dp?.endInclusive).isTrue()
         assertThat(dp?.start(stringConverter).toString()).isEqualTo("2018-01-01T12:00:01")
         assertThat(dp?.end(stringConverter).toString()).isEqualTo("2018-01-02T12:00:00")
+    }
+
+    @Test
+    fun dateIntervalWithTimesAndOffset() {
+        val dp = "[2018-01-01T12:00:01+02:00,2018-01-02T12:00+02:00]". parseAsDateFilter("somedate", true)
+        assertThat(dp).isNotNull()
+        assertThat(dp?.startInclusive).isTrue()
+        assertThat(dp?.endInclusive).isTrue()
+        assertThat(dp?.start(stringConverter).toString()).isEqualTo("2018-01-01T12:00:01+02:00")
+        assertThat(dp?.end(stringConverter).toString()).isEqualTo("2018-01-02T12:00:00+02:00")
     }
 
     @Test
