@@ -52,8 +52,8 @@ private const val wildcard = "*"
 private val startOfTime = LocalDateTime.now().minusYears(100)
 private val endOfTime = LocalDateTime.now().plusYears(100)
 private val dateTimeFormatter = DateTimeFormatterBuilder()
-        .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-        .appendOptional(DateTimeFormatter.ISO_LOCAL_DATE)
+        .appendOptional(DateTimeFormatter.ISO_DATE_TIME)
+        .appendOptional(DateTimeFormatter.ISO_DATE)
         .toFormatter()
 
 private fun String.isIntervalExpression(): Boolean = DATE_INTERVAL_SYNTAX.matcher(trim()).matches()

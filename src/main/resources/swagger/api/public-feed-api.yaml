@@ -41,6 +41,12 @@ paths:
              '[*,2019-06-01)' will match all ads published before June of 2019, while [2019-06-01,*) will match all ads
              published on or after June of 2019. Some literals are also supported, like 'today',
              'tomorrow' and 'yesterday' for dates. And 'now' indicating the current date and time.
+            
+             NB: Dates are by default parsed as UTC (+00.00). If you want to specify a timezone you can do 
+             so by providing the offset in the date or time with the format 'yyyy-MM-ddTZD' or 'yyyy-MM-ddTHH:mm:ssTZD'
+             where "TZD" is the time zone designator (Z or +hh:mm or -hh:mm). Examples for Europe/Oslo during Daylight 
+             saving time: '2019-06-12+02:00', '2019-06-12T23:00:00+02:00' 
+
           required: false
           schema:
             type: "string"
