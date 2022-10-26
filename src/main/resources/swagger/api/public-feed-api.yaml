@@ -45,7 +45,9 @@ paths:
              NB: Dates are by default parsed as UTC (+00.00). If you want to specify a timezone you can do 
              so by providing the offset in the date or time with the format 'yyyy-MM-ddTZD' or 'yyyy-MM-ddTHH:mm:ssTZD'
              where "TZD" is the time zone designator (Z or +hh:mm or -hh:mm). Examples for Europe/Oslo during Daylight 
-             saving time: '2019-06-12+02:00', '2019-06-12T23:00:00+02:00' 
+             saving time: '2019-06-12+02:00', '2019-06-12T23:00:00+02:00'. Be aware that the ISO timestamp needs to be 
+             URL-encoded when providing offset as "+" is a special character that gets decoded to a space in a URL.
+             (Alternatively you can simply replace "+" with the encoded "%2B" in the string)
 
           required: false
           schema:
