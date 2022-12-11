@@ -46,8 +46,8 @@ which is described in the next section.
 
 There is a limit on the number of ads available in the feed, for any particular
 set of filtering criteria. This limit applies to the total number of hits
-regardless of paging, and it is currently at 1000 ads. When no filtering
-criteria are used, the API will provide the 1000 most recently published ads,
+regardless of paging, and it is currently at 5000 ads. When no filtering
+criteria are used, the API will provide the 5000 most recently published ads,
 but no more. The feed is always sorted on publishing date, from most recent to
 older.
 
@@ -56,7 +56,7 @@ If you need to get all currently active ads, there are a few options:
 1. Filter on published-date. If you start by consuming the entire feed the first
    time, you can "page back in time" by filtering subsequent feed page-throughs
    on the oldest published-date of the previous fetch (e.g. the published date
-   of the last ad). This way, you get the next 1000, which will all be older
+   of the last ad). This way, you get the next 5000, which will all be older
    than the ads in the first batch. Continue going back in time until you get no
    more hits. Then you will have fetched all currently active ads.
 
@@ -83,7 +83,7 @@ If you need to get all currently active ads, there are a few options:
 
 3. Future option: the feed will eventually allow filtering on geography and
    possibly other data, which can be used to bring the complete number of
-   matching ads well below the limit of 1000. In that case, you can assume you
+   matching ads well below the limit of 5000. In that case, you can assume you
    have all relevant ads after one feed page-through.
 
 -------------------
