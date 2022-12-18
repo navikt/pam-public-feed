@@ -12,7 +12,7 @@
         <main.class>no.nav.pam.feed.BootstrapKt</main.class>
         <kotlin.version>1.6.10</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <ktor.version>1.6.7</ktor.version>
+        <ktor.version>2.0.0</ktor.version>
         <assertj.version>3.12.0</assertj.version>
         <coroutines.version>1.5.2</coroutines.version>
         <kotlin_loggin.version>2.1.21</kotlin_loggin.version>
