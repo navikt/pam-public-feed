@@ -1,3 +1,3 @@
 {
-  "ingress": ["https://pam-public-feed.dev-gcp.nais.io", "https://arbeidsplassen.dev.nav.no/public-feed"]
+  "ingress": ["https://pam-public-feed.dev.intern.nav.no", "https://arbeidsplassen.dev.nav.no/public-feed"]
 }
