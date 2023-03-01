@@ -18,7 +18,7 @@
         <kotlin_loggin.version>2.1.21</kotlin_loggin.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
         <jackson.version>2.13.4</jackson.version>
-        <elastic-client>7.17.6</elastic-client>
+        <elastic-client>7.17.8</elastic-client>
         <micrometer.version>1.8.1</micrometer.version>
     </properties>
 
@@ -135,7 +135,7 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.33</version>
+            <version>2.0</version>
         </dependency>
 
         <dependency>
