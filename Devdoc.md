@@ -8,7 +8,7 @@ The API is documented with in swagger. When the API changes, please update the a
 
 1. Create the token:
 
-        curl https://pam-public-feed.prod-gcp.nais.io/public-feed/internal/newApiToken -d subject=EMAIL
+        curl https://pam-public-feed.intern.nav.no/public-feed/internal/newApiToken -d subject=EMAIL
     
     where `EMAIL` is the email address provided as customer contact information.
     

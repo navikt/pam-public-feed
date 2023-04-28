@@ -5,7 +5,7 @@ As a public agency responsible for getting people into work, NAV keeps a job ads
 Publishing data about available jobs for the Norwegian population and employers is found in this API
 
 ## Terms of service
-Terms of service for the use of the feed API can be found here: https://arbeidsplassen.nav.no/publicfeed/swagger/ 
+Terms of service for the use of the feed API can be found here: https://arbeidsplassen.nav.no/vilkar-api
 
 ## Authentication
 
