@@ -10,11 +10,10 @@ on:
       - master
 jobs:
   call-workflow:
-    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v2
+    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v4
     with:
       JAVA_VERSION: 11
       BUILD_CACHE: maven
     secrets:
       NAIS_DEPLOY_APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
+      NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
