@@ -8,12 +8,18 @@ on:
       - "CODEOWNERS"
     branches:
       - master
+      - feature/**
 jobs:
   call-workflow:
-    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v4
+    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v6
+    permissions:
+      actions: read
+      contents: write
+      security-events: write
+      id-token: write
     with:
       JAVA_VERSION: 11
       BUILD_CACHE: maven
+      SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'master' }}
     secrets:
-      NAIS_DEPLOY_APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
       NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
