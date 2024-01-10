@@ -5,6 +5,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: navikt/pam-deploy/.github/workflows/deploy-prod.yml@v2
-    secrets:
-      NAIS_DEPLOY_APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+    uses: navikt/pam-deploy/.github/workflows/deploy-prod.yml@v6
+    permissions:
+      contents: write
+      id-token: write

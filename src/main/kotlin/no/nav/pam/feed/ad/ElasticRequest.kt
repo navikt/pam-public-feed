@@ -2,12 +2,12 @@ package no.nav.pam.feed.ad
 
 import mu.KotlinLogging
 import org.apache.lucene.search.join.ScoreMode
-import org.elasticsearch.index.query.NestedQueryBuilder
-import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.index.query.RangeQueryBuilder
-import org.elasticsearch.search.builder.SearchSourceBuilder
-import org.elasticsearch.search.sort.SortOrder
+import org.opensearch.index.query.NestedQueryBuilder
+import org.opensearch.index.query.QueryBuilder
+import org.opensearch.index.query.QueryBuilders
+import org.opensearch.index.query.RangeQueryBuilder
+import org.opensearch.search.builder.SearchSourceBuilder
+import org.opensearch.search.sort.SortOrder
 
 class ElasticRequest(
         private val pageSize: Int,
@@ -62,10 +62,12 @@ private class LocationQuery(val filters: List<ValueParam> = listOf()) {
                 .mapValues { QueryBuilders.boolQuery().apply { should().addAll( it.value ) } } // convert term query list to a bool query with each element as should
                 .values.fold(QueryBuilders.boolQuery()) { acc, it -> acc.filter(it)} // Fold the queries created in the last step into a wrapping bool filter query
 
-        return listOf(NestedQueryBuilder(
+        return listOf(
+            NestedQueryBuilder(
                 "locationList",
                 locationQuery,
-                ScoreMode.Avg))
+                ScoreMode.Avg)
+        )
     }
 
 }
