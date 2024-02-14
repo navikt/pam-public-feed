@@ -11,7 +11,7 @@ on:
       - feature/**
 jobs:
   call-workflow:
-    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v6
+    uses: navikt/pam-deploy/.github/workflows/deploy-dev.yml@v7
     permissions:
       actions: read
       contents: write
