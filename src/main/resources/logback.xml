@@ -13,29 +13,21 @@
     <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
 
     <appender name="secureLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator> <!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
-                <expression>return logger.endsWith("secure");</expression>
-            </evaluator>
-            <OnMismatch>DENY</OnMismatch>
-            <OnMatch>ACCEPT</OnMatch>
-        </filter>
-
         <file>/secure-logs/secure.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>/secure-logs/secure.log.%i</fileNamePattern>
             <minIndex>1</minIndex>
-            <maxIndex>2</maxIndex>
+            <maxIndex>1</maxIndex>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
             <maxFileSize>50MB</maxFileSize>
         </triggeringPolicy>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeMdcKeyName>TraceId</includeMdcKeyName>
-            <includeMdcKeyName>konsument_id</includeMdcKeyName>
-            <includeMdcKeyName>U</includeMdcKeyName>
-        </encoder>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
+
+    <logger level="INFO" name="secureLogger" additivity="false">
+        <appender-ref ref="secureLog"/>
+    </logger>
 
     <logger name="no.nav" level="INFO"/>
     <logger name="ktor" level="INFO"/>

@@ -22,7 +22,7 @@ import java.io.IOException
 internal const val MAX_TOTAL_HITS = 5000
 
 private val log = KotlinLogging.logger { }
-private val secureLog = LoggerFactory.getLogger("SearchClient.kt.secure")
+private val secureLog = KotlinLogging.logger("secureLogger")
 
 fun Route.feed(
         searchApiHost: String,
