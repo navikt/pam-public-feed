@@ -35,6 +35,8 @@ spec:
       destinations:
         - id: loki
         - id: elastic
+  secureLogs:
+    enabled: true
   ingresses:
   {{#each ingress as |url|}}
      - {{url}}

@@ -16,11 +16,13 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import mu.KotlinLogging
 import mu.withLoggingContext
+import org.slf4j.LoggerFactory
 import java.io.IOException
 
 internal const val MAX_TOTAL_HITS = 5000
 
 private val log = KotlinLogging.logger { }
+private val secureLog = KotlinLogging.logger("secureLogger")
 
 fun Route.feed(
         searchApiHost: String,
@@ -33,7 +35,7 @@ fun Route.feed(
     get("/api/v1/ads") {
         val subject = call.principal<JWTPrincipal>()?.payload?.subject ?: "?"
         withLoggingContext("U" to subject) {
-            log.debug { "Auth subject: ${subject}" }
+            secureLog.info ("Auth subject: $subject")
 
             searchMeter.searchPerformed(
                     client = subject.substringAfter("@"),
