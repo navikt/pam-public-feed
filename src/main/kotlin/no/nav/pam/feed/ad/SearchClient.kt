@@ -17,6 +17,7 @@ import io.ktor.routing.get
 import mu.KotlinLogging
 import mu.withLoggingContext
 import java.io.IOException
+import java.time.format.DateTimeParseException
 
 internal const val MAX_TOTAL_HITS = 5000
 
@@ -39,7 +40,8 @@ fun Route.feed(
                     client = subject.substringAfter("@"),
                     searchParameterTypes = *call.parameters.names().toTypedArray())
 
-            val elasticRequest = ElasticRequestBuilder(call.parameters["size"], call.parameters["page"])
+            try {
+                val elasticRequest = ElasticRequestBuilder(call.parameters["size"], call.parameters["page"])
                     .updated(call.parameters["updated"])
                     .published(call.parameters["published"])
                     .uuid(call.parameters["uuid"])
@@ -49,14 +51,16 @@ fun Route.feed(
                     .county(call.parameters["county"])
                     .category(call.parameters["category"])
                     .build()
+                val elasticRequestAsJson = elasticRequest.asJson()
 
-            val elasticRequestAsJson = elasticRequest.asJson()
-
-            val response = httpClient.post<SearchResponseRoot>(url) {
-                body = TextContent(elasticRequestAsJson, ContentType.Application.Json)
+                val response = httpClient.post<SearchResponseRoot>(url) {
+                    body = TextContent(elasticRequestAsJson, ContentType.Application.Json)
+                }
+                call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
+            } catch (dtpe: DateTimeParseException) {
+                log.warn("Datoparsing feilet: ${dtpe.message}")
+                call.respond(HttpStatusCode.BadRequest, "Date is badly formatted")
             }
-
-            call.respond(mapResult(response, call.parameters.page, call.parameters.size, call.request.host()))
         }
     }
 }
