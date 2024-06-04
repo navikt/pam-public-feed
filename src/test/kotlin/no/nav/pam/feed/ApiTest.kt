@@ -185,6 +185,7 @@ class ApiTest {
         assertEquals(332, feed.totalElements)
         assertFalse(feed.first)
         assertFalse(feed.last)
+        assertEquals("Heltid", feed.content.firstOrNull()?.extent)
     }
 
     @Test
