@@ -1,8 +1,26 @@
-## Beskrivelse
+# THE PUBLIC-FEED API IS DEPRECATED
 
-As a public agency responsible for getting people into work, NAV keeps a job ads database of open positions in Norway. As a public actor, NAV is also required to publish available data to other actors.
+The public feed API is deprecated, instead you should use https://navikt.github.io/pam-stilling-feed/
+
+From 1st May 2025 the public-feed API will no longer be available. Instead you should use the stilling-feed API.
+The stilling-feed API is already available, so you can start migrating right now.
+
+The main differences between the APIs are:
+
+1. The stilling-feed API is a feed API where you receive events regarding job vacancies. The public-feed API is more like a paginated search.
+2. The stilling-feed API contains more data about an ad. E.g, classification codes like ESCO and STYRK 08 are included.
+
+By sending events, the stilling-feed API makes it easier for consumers to keep updated when an ad change or expire. However,
+consumers used to apply the existing filtering capabilities will have to implement those filters on the consumer side.
+
+
+# Description of the old public-feed API
+As a public agency responsible for getting people into work, Nav keeps a job ads database of open positions in Norway. As a public actor, Nav is also required to publish available data to other actors.
 
 Publishing data about available jobs for the Norwegian population and employers is found in this API
+
+
+
 
 ## Terms of service
 Terms of service for the use of the feed API can be found here: https://arbeidsplassen.nav.no/vilkar-api-gammel
@@ -20,8 +38,10 @@ in the request.
 
 The current public token is
 ```
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwdWJsaWMudG9rZW4udjFAbmF2Lm5vIiwiYXVkIjoiZmVlZC1hcGktdjEiLCJpc3MiOiJuYXYubm8iLCJpYXQiOjE1NTc0NzM0MjJ9.jNGlLUF9HxoHo5JrQNMkweLj_91bgk97ZebLdfx3_UQ
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwdWJsaWMudG9rZW4udjJAbmF2Lm5vIiwiYXVkIjoiZmVlZC1hcGktdjEiLCJpc3MiOiJuYXYubm8iLCJleHAiOjE3NDYwNTA0MDAsImlhdCI6MTczMjExMjk2OX0.WHEC0oZgzZQjut1n2ZQK2xtW2gPhUCaBzTup2aqF2Wk
 ```
+
+Valid public tokens will rotate at random intervals.
 
 ## Request and responses
 Requests and responses are documented with
