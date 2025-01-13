@@ -18,7 +18,8 @@ jobs:
       security-events: write
       id-token: write
     with:
-      JAVA_VERSION: 11
+      JAVA_VERSION: 21
+      JAVA_DISTRIBUTION: 'temurin'
       BUILD_CACHE: maven
       SKIP_DRAFT_RELEASE: ${{ github.ref_name != 'master' }}
     secrets:
